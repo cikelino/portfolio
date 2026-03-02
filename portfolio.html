@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Il Tuo Nome | Full Stack Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green: #4ade80;
+      --green-dim: #22c55e;
+      --green-dark: #14532d;
+      --bg: #050a05;
+      --bg2: #080f08;
+      --text: #f0f0f0;
+      --muted: #6b7280;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    #cursor-dot {
+      position: fixed;
+      top: 0; left: 0;
+      width: 10px; height: 10px;
+      background: var(--green);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease;
+      box-shadow: 0 0 8px var(--green), 0 0 20px var(--green);
+    }
+    #cursor-glow {
+      position: fixed;
+      top: 0; left: 0;
+      width: 350px; height: 350px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(74,222,128,0.12) 0%, rgba(74,222,128,0.04) 40%, transparent 70%);
+      transition: transform 0.18s ease;
+    }
+
+    /* ── PARTICLES CANVAS ── */
+    #particles-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      background: rgba(10,20,10,0.55);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(74,222,128,0.15);
+      border-radius: 50px;
+      padding: 14px 32px;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--green); }
+    .nav-cta {
+      background: var(--text);
+      color: #000 !important;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-weight: 700 !important;
+      transition: background 0.2s, color 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--green) !important; color: #000 !important; }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero-logo {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      border: 2.5px solid #fff;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 48px;
+      background: rgba(0,0,0,0.4);
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -2px;
+      color: #fff;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 7rem);
+      line-height: 1.05;
+      font-weight: 800;
+      animation: fadeUp 0.9s 0.2s ease both;
+    }
+    .hero-title .green { color: var(--green); }
+    .hero-title .italic {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: #ccc;
+    }
+
+    .hero-subtitle {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      animation: fadeUp 0.9s 0.35s ease both;
+    }
+
+    .hero-buttons {
+      margin-top: 52px;
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      animation: fadeUp 0.9s 0.5s ease both;
+    }
+    .btn-primary {
+      background: var(--text);
+      color: #000;
+      border: none;
+      padding: 16px 34px;
+      border-radius: 50px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: none;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--green); transform: scale(1.03); }
+    .btn-secondary {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .btn-secondary:hover { opacity: 1; }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .section-title .italic {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: #aaa;
+    }
+    .section-desc {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ── SKILLS GRID ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 60px;
+    }
+    .skill-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(74,222,128,0.1);
+      border-radius: 16px;
+      padding: 24px 20px;
+      transition: border-color 0.3s, background 0.3s, transform 0.3s;
+    }
+    .skill-card:hover {
+      border-color: rgba(74,222,128,0.4);
+      background: rgba(74,222,128,0.05);
+      transform: translateY(-4px);
+    }
+    .skill-card .icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .skill-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+    .skill-card p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+      margin-top: 60px;
+    }
+    .project-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .project-card:hover {
+      border-color: rgba(74,222,128,0.3);
+      transform: translateY(-6px);
+    }
+    .project-img {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #0a1a0a, #1a3a1a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    .project-body { padding: 24px; }
+    .project-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .project-body p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      font-size: 0.7rem;
+      padding: 4px 12px;
+      border-radius: 50px;
+      border: 1px solid rgba(74,222,128,0.3);
+      color: var(--green);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── CONTACT ── */
+    #contact { text-align: center; }
+    #contact .section-desc { margin: 0 auto 40px; }
+    .contact-email {
+      display: inline-block;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 800;
+      color: var(--green);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .contact-email:hover { border-color: var(--green); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 40px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(74,222,128,0.2), transparent);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { gap: 20px; padding: 12px 20px; }
+      nav a { font-size: 0.7rem; }
+      section { padding: 80px 24px; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor-dot"></div>
+<div id="cursor-glow"></div>
+
+<!-- Particles -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="#hero">Home</a>
+  <a href="#skills">Skills</a>
+  <a href="#projects">Progetti</a>
+  <a href="#about">Chi Sono</a>
+  <a href="#contact" class="nav-cta">Contattami</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero" style="max-width:100%; padding:0;">
+  <div class="hero-logo">M</div>
+  <h1 class="hero-title">
+    Il tuo <span class="green">Full Stack</span><br/>
+    <span class="italic">Developer.</span>
+  </h1>
+  <p class="hero-subtitle">Web Developer Junior · React · Node.js · UI Design</p>
+  <div class="hero-buttons">
+    <a href="#projects" class="btn-primary">Vedi i Progetti →</a>
+    <a href="#skills" class="btn-secondary">Scopri le Skills</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-tag">Competenze</p>
+  <h2 class="section-title">Le mie <span class="green">Skills</span><br/><span class="italic">tecniche.</span></h2>
+  <p class="section-desc">Tecnologie che uso quotidianamente per costruire applicazioni web moderne, scalabili e performanti.</p>
+  <div class="skills-grid">
+    <div class="skill-card"><div class="icon">⚛️</div><h3>React</h3><p>Componenti, hooks, state management con Redux e Context API.</p></div>
+    <div class="skill-card"><div class="icon">🟩</div><h3>Node.js</h3><p>API REST, Express, middleware, autenticazione JWT.</p></div>
+    <div class="skill-card"><div class="icon">🐘</div><h3>PostgreSQL</h3><p>Database relazionali, query ottimizzate, ORM con Prisma.</p></div>
+    <div class="skill-card"><div class="icon">🎨</div><h3>CSS / Tailwind</h3><p>UI responsive, animazioni, design systems.</p></div>
+    <div class="skill-card"><div class="icon">🐳</div><h3>Docker</h3><p>Containerizzazione, docker-compose, deploy su cloud.</p></div>
+    <div class="skill-card"><div class="icon">🔧</div><h3>Git & GitHub</h3><p>Version control, branching, pull requests, CI/CD.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-tag">Portfolio</p>
+  <h2 class="section-title">I miei <span class="green">Progetti</span><br/><span class="italic">recenti.</span></h2>
+  <p class="section-desc">Applicazioni reali costruite con passione, attenzione ai dettagli e buone pratiche di sviluppo.</p>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-img">🛒</div>
+      <div class="project-body">
+        <h3>E-commerce Platform</h3>
+        <p>Piattaforma e-commerce completa con autenticazione, carrello, pagamenti Stripe e dashboard admin.</p>
+        <div class="tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">PostgreSQL</span></div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-img">📋</div>
+      <div class="project-body">
+        <h3>Task Manager App</h3>
+        <p>App per gestione task con drag & drop, collaborazione in real-time tramite WebSocket e notifiche.</p>
+        <div class="tags"><span class="tag">React</span><span class="tag">Socket.io</span><span class="tag">MongoDB</span></div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-img">🌐</div>
+      <div class="project-body">
+        <h3>Portfolio Personale</h3>
+        <p>Questo stesso sito! Costruito da zero con HTML, CSS e JavaScript puro. Nessun framework.</p>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-tag">Chi Sono</p>
+  <h2 class="section-title">Appassionato di<br/><span class="italic">codice</span> e <span class="green">design.</span></h2>
+  <p class="section-desc" style="max-width:700px; font-size:1.05rem;">
+    Sono un Web Developer Full Stack Junior con la passione per creare esperienze digitali belle e funzionali.
+    Mi piace unire la potenza del codice con l'attenzione ai dettagli del design.
+    Sempre alla ricerca di nuove sfide e opportunità di crescita.
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-tag">Contatti</p>
+  <h2 class="section-title">Lavoriamo<br/><span class="italic">insieme.</span></h2>
+  <p class="section-desc">Hai un progetto in mente? Sono disponibile per collaborazioni, stage e opportunità lavorative.</p>
+  <a href="mailto:tua@email.com" class="contact-email">tua@email.com</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Il Tuo Nome · Fatto con ❤️ e tanto caffè</p>
+</footer>
+
+<script>
+  /* ── CURSOR ── */
+  const dot = document.getElementById('cursor-dot');
+  const glow = document.getElementById('cursor-glow');
+  let mx = 0, my = 0, gx = 0, gy = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  });
+
+  (function animGlow() {
+    gx += (mx - gx) * 0.08;
+    gy += (my - gy) * 0.08;
+    glow.style.left = gx + 'px';
+    glow.style.top  = gy + 'px';
+    requestAnimationFrame(animGlow);
+  })();
+
+  /* ── PARTICLES ── */
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = rand(0, W);
+      this.y = rand(0, H);
+      this.size = rand(1, 3.5);
+      this.speedX = rand(-0.2, 0.2);
+      this.speedY = rand(-0.15, -0.4);
+      this.alpha = rand(0.2, 0.7);
+      this.color = Math.random() > 0.5 ? '#4ade80' : '#22c55e';
+      // some square particles
+      this.square = Math.random() > 0.7;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.y < -10 || this.x < -10 || this.x > W + 10) this.reset();
+    }
+    draw() {
+      ctx.globalAlpha = this.alpha;
+      ctx.fillStyle = this.color;
+      if (this.square) {
+        ctx.fillRect(this.x, this.y, this.size * 2, this.size * 2);
+      } else {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  // Create particles
+  for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+  function animParticles() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animParticles);
+  }
+  animParticles();
+
+  /* ── SCROLL REVEAL ── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.skill-card, .project-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease, border-color 0.3s, background 0.3s';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
