@@ -10,15 +10,15 @@
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 8px var(--green), 0 0 22px var(--green);
+  box-shadow: 0 0 4px var(--green), 0 0 10px var(--green);
 }
 
 #cursor-glow {
   position: fixed;
   top: 0;
   left: 0;
-  width: 380px;
-  height: 380px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9998;
