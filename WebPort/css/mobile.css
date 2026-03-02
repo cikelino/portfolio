@@ -1,0 +1,237 @@
+/* ============================================
+   MOBILE.CSS — Ottimizzazioni per smartphone
+   Attivo sotto i 768px, non tocca il desktop
+   ============================================ */
+
+@media (max-width: 768px) {
+
+  /* ---- CURSOR: disabilita cursore custom su touch ---- */
+  #cursor-dot,
+  #cursor-glow {
+    display: none;
+  }
+
+  body {
+    cursor: auto;
+  }
+
+  /* ---- NAVBAR: hamburger menu ---- */
+  nav {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    transform: none;
+    width: calc(100% - 24px);
+    gap: 0;
+    padding: 14px 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border-radius: 20px;
+  }
+
+  /* Nascondi i link normali su mobile */
+  nav a:not(.nav-cta):not(.nav-brand) {
+    display: none;
+  }
+
+  /* Mostra solo il CTA "Contattami" e crea uno pseudo-brand */
+  .nav-cta {
+    font-size: 0.75rem;
+    padding: 8px 18px;
+  }
+
+  /* ---- HERO ---- */
+  #hero {
+    min-height: 100svh;
+    padding: 100px 20px 60px !important;
+    gap: 0;
+  }
+
+  .hero-logo {
+    margin-bottom: -40px;
+  }
+
+  .hero-logo img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .hero-title {
+    font-size: clamp(2.2rem, 10vw, 3rem);
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .hero-title .italic {
+    display: block;
+    text-align: center;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 28px;
+    width: 100%;
+  }
+
+  .btn-primary {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+    padding: 14px 24px;
+    cursor: pointer;
+  }
+
+  .btn-secondary {
+    cursor: pointer;
+  }
+
+  .hero-social {
+    margin-top: 20px;
+    gap: 12px;
+  }
+
+  /* ---- TICKER ---- */
+  .ticker-wrapper::before,
+  .ticker-wrapper::after {
+    width: 60px;
+  }
+
+  /* ---- SECTIONS ---- */
+  section {
+    padding: 60px 20px !important;
+  }
+
+  .section-title {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+  }
+
+  .section-desc {
+    font-size: 0.92rem;
+  }
+
+  /* ---- SKILLS GRID ---- */
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 36px;
+  }
+
+  .skill-card {
+    padding: 16px 14px;
+  }
+
+  .skill-card h3 {
+    font-size: 0.85rem;
+  }
+
+  .skill-card p {
+    font-size: 0.72rem;
+  }
+
+  /* ---- PROJECTS GRID ---- */
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 36px;
+  }
+
+  .project-card {
+    cursor: pointer;
+  }
+
+  .project-link {
+    cursor: pointer;
+  }
+
+  /* ---- TIMELINE ---- */
+  .timeline-wrap {
+    padding-left: 24px;
+  }
+
+  .timeline-dot {
+    left: -30px;
+  }
+
+  /* ---- ABOUT / LINGUE ---- */
+  .lang-grid {
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .lang-item {
+    padding: 8px 18px;
+  }
+
+  /* ---- CONTACT ---- */
+  #contact {
+    text-align: center;
+  }
+
+  .contact-email {
+    font-size: clamp(1rem, 5vw, 1.5rem);
+    word-break: break-all;
+  }
+
+  .contact-form {
+    margin-top: 32px;
+    padding: 0 4px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 1rem; /* evita lo zoom automatico di iOS */
+  }
+
+  .contact-form button {
+    cursor: pointer;
+  }
+
+  /* ---- MODAL ---- */
+  .modal {
+    padding: 28px 20px;
+    border-radius: 18px;
+  }
+
+  .modal-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-link {
+    text-align: center;
+    cursor: pointer;
+  }
+
+  /* ---- SCROLL TOP BUTTON ---- */
+  #scrollTopBtn {
+    bottom: 20px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    padding: 30px 20px;
+  }
+}
+
+/* ---- Extra small (sotto 400px) ---- */
+@media (max-width: 400px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+}
