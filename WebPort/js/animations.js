@@ -116,8 +116,8 @@ gsap.fromTo('.contact-form', { opacity: 0, y: 30 }, {
   scrollTrigger: { trigger: '.contact-form', start: 'top 88%', toggleActions: 'play none none none' }
 });
 
-// 10. Parallax logo
+// 10. Parallax logo — leggero per evitare scatti
 gsap.to('.hero-logo', {
-  y: -50, ease: 'none',
-  scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+  y: -20, ease: 'none', immediateRender: false,
+  scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
 });
