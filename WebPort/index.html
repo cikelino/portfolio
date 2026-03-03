@@ -47,12 +47,36 @@
   </div>
 
   <nav id="navbar">
-    <a href="#hero" data-i18n="nav-home">Home</a>
-    <a href="#about" data-i18n="nav-about">Chi Sono</a>
-    <a href="#timeline" data-i18n="nav-timeline">Percorso</a>
-    <a href="#skills" data-i18n="nav-skills">Skills</a>
-    <a href="#projects" data-i18n="nav-projects">Progetti</a>
-    <a href="#contact" class="nav-cta" data-i18n="nav-contact">Contattami</a>
+    <span class="nav-brand">GS.</span>
+    <a href="#hero"     class="nav-link" data-i18n="nav-home">Home</a>
+    <a href="#about"    class="nav-link" data-i18n="nav-about">Chi Sono</a>
+    <a href="#timeline" class="nav-link" data-i18n="nav-timeline">Percorso</a>
+    <a href="#skills"   class="nav-link" data-i18n="nav-skills">Skills</a>
+    <a href="#projects" class="nav-link" data-i18n="nav-projects">Progetti</a>
+    <a href="#contact"  class="nav-cta"  data-i18n="nav-contact">Contattami</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Apri menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-mobile-menu" id="navMobileMenu">
+      <a href="#hero"     class="nav-mobile-link" data-i18n="nav-home">Home</a>
+      <a href="#about"    class="nav-mobile-link" data-i18n="nav-about">Chi Sono</a>
+      <a href="#timeline" class="nav-mobile-link" data-i18n="nav-timeline">Percorso</a>
+      <a href="#skills"   class="nav-mobile-link" data-i18n="nav-skills">Skills</a>
+      <a href="#projects" class="nav-mobile-link" data-i18n="nav-projects">Progetti</a>
+      <a href="#contact"  class="nav-mobile-link nav-mobile-cta" data-i18n="nav-contact">Contattami</a>
+    </div>
+  </nav>
+
+  <!-- Navbar scroll orizzontale (< 600px) -->
+  <nav id="nav-mobile-scroll">
+    <div id="nav-scroll-track">
+      <a href="#hero"     class="nav-scroll-link" data-section="hero">Home</a>
+      <a href="#about"    class="nav-scroll-link" data-section="about">Chi Sono</a>
+      <a href="#timeline" class="nav-scroll-link" data-section="timeline">Percorso</a>
+      <a href="#skills"   class="nav-scroll-link" data-section="skills">Skills</a>
+      <a href="#projects" class="nav-scroll-link" data-section="projects">Progetti</a>
+      <a href="#contact"  class="nav-scroll-link" data-section="contact">Contattami</a>
+    </div>
   </nav>
 
   <section id="hero" style="max-width:100%; padding:0;">
@@ -369,6 +393,118 @@
   <script src="js/modal.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    /* === HAMBURGER 601-768px === */
+    (function() {
+      var hb = document.getElementById("navHamburger");
+      var mm = document.getElementById("navMobileMenu");
+      if (!hb || !mm) return;
+      hb.addEventListener("click", function() {
+        var o = mm.classList.toggle("open");
+        hb.classList.toggle("active", o);
+        hb.setAttribute("aria-expanded", String(o));
+      });
+      document.querySelectorAll(".nav-mobile-link").forEach(function(l) {
+        l.addEventListener("click", function() {
+          mm.classList.remove("open"); hb.classList.remove("active");
+          hb.setAttribute("aria-expanded","false");
+        });
+      });
+      document.addEventListener("click", function(e) {
+        if (!e.target.closest("#navbar")) {
+          mm.classList.remove("open"); hb.classList.remove("active");
+          hb.setAttribute("aria-expanded","false");
+        }
+      });
+    })();
+
+    /* === NASTRO INFINITO <600px — nessun JS per show/hide, solo CSS === */
+    (function() {
+      var track = document.getElementById("nav-scroll-track");
+      if (!track) return;
+      var SECS = ["hero","about","timeline","skills","projects","contact"];
+      var LABS = ["Home","Chi Sono","Percorso","Skills","Progetti","Contattami"];
+      var N = SECS.length;
+      var COPIES = 5;
+
+      track.innerHTML = "";
+      var allLinks = [];
+      for (var c = 0; c < COPIES; c++) {
+        for (var i = 0; i < N; i++) {
+          var a = document.createElement("a");
+          a.href = "#" + SECS[i];
+          a.className = "nav-scroll-link";
+          a.dataset.section = SECS[i];
+          a.dataset.copy = String(c);
+          a.textContent = LABS[i];
+          track.appendChild(a);
+          allLinks.push(a);
+        }
+      }
+
+      var setW = 0;
+      function measureSet() {
+        setW = 0;
+        for (var i = 0; i < N; i++) setW += allLinks[i].offsetWidth;
+      }
+
+      /* Scroll infinito: ricicla silenziosamente ai bordi */
+      track.addEventListener("scroll", function() {
+        if (!setW) measureSet();
+        var sl = track.scrollLeft;
+        if (sl < setW * 0.6)               track.scrollLeft = sl + setW;
+        else if (sl > setW * (COPIES-1.6)) track.scrollLeft = sl - setW;
+      }, { passive: true });
+
+      function centerLink(el, smooth) {
+        var t = el.offsetLeft - track.clientWidth/2 + el.offsetWidth/2;
+        if (smooth) track.scrollTo({ left: t, behavior: "smooth" });
+        else        track.scrollLeft = t;
+      }
+
+      function setActive(secId) {
+        allLinks.forEach(function(l) { l.classList.remove("current"); });
+        allLinks.forEach(function(l) {
+          if (l.dataset.section === secId) l.classList.add("current");
+        });
+        var mid = null;
+        allLinks.forEach(function(l) {
+          if (l.dataset.section === secId && l.dataset.copy === "2") mid = l;
+        });
+        if (mid) centerLink(mid, true);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      }, { rootMargin: "-35% 0px -35% 0px", threshold: 0 });
+
+      SECS.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) io.observe(el);
+      });
+
+      allLinks.forEach(function(link) {
+        link.addEventListener("click", function(e) {
+          e.preventDefault();
+          var el = document.getElementById(link.dataset.section);
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+          setActive(link.dataset.section);
+        });
+      });
+
+      window.addEventListener("load", function() {
+        measureSet();
+        var homeRef = null;
+        allLinks.forEach(function(l) {
+          if (l.dataset.section==="hero" && l.dataset.copy==="2") homeRef = l;
+        });
+        if (homeRef) centerLink(homeRef, false);
+        setActive("hero");
+      });
+    })();
+  </script>
 
 </body>
 
