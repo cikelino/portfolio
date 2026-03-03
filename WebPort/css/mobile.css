@@ -152,13 +152,33 @@
   }
 
   /* ---- TIMELINE ---- */
-  .timeline-wrap {
-    padding-left: 24px;
+  /* ── TIMELINE MOBILE — colonna singola ── */
+  .timeline-center-line { left: 20px; }
+
+  .timeline-item,
+  .tl-left,
+  .tl-right {
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    padding-left: 52px;
   }
 
-  .timeline-dot {
-    left: -30px;
+  .tl-left .timeline-card,
+  .tl-right .timeline-card {
+    width: 100% !important;
+    margin: 0 !important;
+    text-align: left !important;
   }
+
+  .tl-left .tl-dot,
+  .tl-right .tl-dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: none;
+  }
+
+  .tl-left .tl-tags { justify-content: flex-start; }
 
   /* ---- ABOUT / LINGUE ---- */
   .lang-grid {

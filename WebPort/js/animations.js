@@ -79,19 +79,36 @@ gsap.utils.toArray('.project-card').forEach((card, i) => {
 });
 
 // 7. Timeline — linea che si disegna + items da sinistra
+// Timeline — linea centrale
 gsap.fromTo('#timelineLine', { height: '0%' }, {
-  height: '100%', duration: 1.4, ease: 'power2.inOut',
+  height: '100%', duration: 1.6, ease: 'power2.inOut',
   scrollTrigger: { trigger: '.timeline-wrap', start: 'top 75%' }
 });
 
-gsap.utils.toArray('.timeline-item').forEach((item, i) => {
-  gsap.fromTo(item,
-    { opacity: 0, x: -40 },
-    {
-      opacity: 1, x: 0, duration: 0.6, delay: i * 0.18, ease: 'power3.out',
-      scrollTrigger: { trigger: item, start: 'top 88%', toggleActions: 'play none none none' }
-    }
-  );
+// Timeline — card alternata: sx entra da sx, dx entra da dx
+gsap.utils.toArray('.timeline-item').forEach((item) => {
+  const isLeft = item.classList.contains('tl-left');
+  const card   = item.querySelector('.timeline-card');
+  const dot    = item.querySelector('.tl-dot');
+
+  if (card) {
+    gsap.fromTo(card,
+      { opacity: 0, x: isLeft ? -50 : 50 },
+      {
+        opacity: 1, x: 0, duration: 0.65, ease: 'power3.out',
+        scrollTrigger: { trigger: item, start: 'top 88%', toggleActions: 'play none none none' }
+      }
+    );
+  }
+  if (dot) {
+    gsap.fromTo(dot,
+      { opacity: 0, scale: 0.4 },
+      {
+        opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2)',
+        scrollTrigger: { trigger: item, start: 'top 88%', toggleActions: 'play none none none' }
+      }
+    );
+  }
 });
 
 // 8. Lang badges
