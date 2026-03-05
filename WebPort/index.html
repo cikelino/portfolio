@@ -67,17 +67,20 @@
     </div>
   </nav>
 
-  <!-- Navbar scroll orizzontale (< 600px) -->
-  <nav id="nav-mobile-scroll">
-    <div id="nav-scroll-track">
-      <a href="#hero"     class="nav-scroll-link" data-section="hero">Home</a>
-      <a href="#about"    class="nav-scroll-link" data-section="about">Chi Sono</a>
-      <a href="#timeline" class="nav-scroll-link" data-section="timeline">Percorso</a>
-      <a href="#skills"   class="nav-scroll-link" data-section="skills">Skills</a>
-      <a href="#projects" class="nav-scroll-link" data-section="projects">Progetti</a>
-      <a href="#contact"  class="nav-scroll-link" data-section="contact">Contattami</a>
+  <!-- Navbar mobile pill (< 768px) -->
+  <div id="nav-mobile-pill">
+    <div id="nav-pill-inner">
+      <div id="nav-pill-track">
+        <div id="nav-pill-indicator"></div>
+        <a href="#hero"     class="nav-pill-link active" data-section="hero">Home</a>
+        <a href="#about"    class="nav-pill-link" data-section="about">Chi Sono</a>
+        <a href="#timeline" class="nav-pill-link" data-section="timeline">Percorso</a>
+        <a href="#skills"   class="nav-pill-link" data-section="skills">Skills</a>
+        <a href="#projects" class="nav-pill-link" data-section="projects">Progetti</a>
+        <a href="#contact"  class="nav-pill-link" data-section="contact">Contattami</a>
+      </div>
     </div>
-  </nav>
+  </div>
 
   <section id="hero" style="max-width:100%; padding:0;">
     <div class="hero-logo">
@@ -86,7 +89,7 @@
         alt="GS Logo" />
     </div>
     <h1 class="hero-title" id="heroTitle" data-i18n="hero-title">
-      Ciao, sono <span class="green">Gabriele</span><br /><span class="italic">Sergio.</span>
+      Ciao, sono<br class="mob-br" /> <span class="green">Gabriele</span><br /><span class="italic">Sergio.</span>
     </h1>
     <p class="hero-subtitle">
       <span id="typingText"></span><span class="typing-cursor"></span>
@@ -418,90 +421,148 @@
       });
     })();
 
-    /* === NASTRO INFINITO <600px — nessun JS per show/hide, solo CSS === */
+    /* === NAVBAR MOBILE PILL — scroll infinito + GSAP === */
     (function() {
-      var track = document.getElementById("nav-scroll-track");
-      if (!track) return;
+      if (window.innerWidth > 768) return;
+
+      var pill      = document.getElementById("nav-mobile-pill");
+      var inner     = document.getElementById("nav-pill-inner");
+      var track     = document.getElementById("nav-pill-track");
+      var indicator = document.getElementById("nav-pill-indicator");
+
+      if (!pill || !track || !indicator) return;
+
       var SECS = ["hero","about","timeline","skills","projects","contact"];
       var LABS = ["Home","Chi Sono","Percorso","Skills","Progetti","Contattami"];
-      var N = SECS.length;
-      var COPIES = 5;
+      var COPIES = 3;   /* 3 copie: sinistra | centro (quella "reale") | destra */
+      var CENTER_COPY = 1;
+      var activeSection = "hero";
 
+      /* ── 1. svuota il track e crea N_COPIES set di link ── */
       track.innerHTML = "";
-      var allLinks = [];
+      indicator.remove(); /* lo re-inseriamo dopo i link */
+
+      var allNodes = []; /* tutti i link di tutte le copie */
       for (var c = 0; c < COPIES; c++) {
-        for (var i = 0; i < N; i++) {
+        for (var i = 0; i < SECS.length; i++) {
           var a = document.createElement("a");
-          a.href = "#" + SECS[i];
-          a.className = "nav-scroll-link";
+          a.href        = "#" + SECS[i];
+          a.className   = "nav-pill-link";
           a.dataset.section = SECS[i];
-          a.dataset.copy = String(c);
+          a.dataset.copy    = String(c);
           a.textContent = LABS[i];
           track.appendChild(a);
-          allLinks.push(a);
+          allNodes.push(a);
         }
       }
 
+      /* re-inserisci indicator come primo figlio (stacking z-index) */
+      track.insertBefore(indicator, track.firstChild);
+
+      /* ── 2. helper: larghezza di un set (6 link) ─────── */
       var setW = 0;
       function measureSet() {
         setW = 0;
-        for (var i = 0; i < N; i++) setW += allLinks[i].offsetWidth;
+        /* misura i primi 6 link (copy 0) */
+        for (var i = 0; i < SECS.length; i++) setW += allNodes[i].offsetWidth;
       }
 
-      /* Scroll infinito: ricicla silenziosamente ai bordi */
-      track.addEventListener("scroll", function() {
-        if (!setW) measureSet();
-        var sl = track.scrollLeft;
-        if (sl < setW * 0.6)               track.scrollLeft = sl + setW;
-        else if (sl > setW * (COPIES-1.6)) track.scrollLeft = sl - setW;
-      }, { passive: true });
+      /* ── 3. indicatore ──────────────────────────────── */
+      function moveIndicator(el, animate) {
+        gsap.to(indicator, {
+          duration: animate ? 0.38 : 0,
+          ease: "power3.out",
+          left:  el.offsetLeft,
+          width: el.offsetWidth
+        });
+      }
 
-      function centerLink(el, smooth) {
-        var t = el.offsetLeft - track.clientWidth/2 + el.offsetWidth/2;
+      /* ── 4. centra link nel track (scroll) ───────────── */
+      function scrollToLink(el, smooth) {
+        var t = el.offsetLeft - track.clientWidth / 2 + el.offsetWidth / 2;
         if (smooth) track.scrollTo({ left: t, behavior: "smooth" });
         else        track.scrollLeft = t;
       }
 
-      function setActive(secId) {
-        allLinks.forEach(function(l) { l.classList.remove("current"); });
-        allLinks.forEach(function(l) {
-          if (l.dataset.section === secId) l.classList.add("current");
+      /* ── 5. setActive ────────────────────────────────── */
+      function setActive(secId, fromScroll) {
+        activeSection = secId;
+        var centerLink = null;
+        allNodes.forEach(function(l) {
+          var on = l.dataset.section === secId;
+          l.classList.toggle("active", on);
+          if (on && l.dataset.copy === String(CENTER_COPY)) centerLink = l;
         });
-        var mid = null;
-        allLinks.forEach(function(l) {
-          if (l.dataset.section === secId && l.dataset.copy === "2") mid = l;
-        });
-        if (mid) centerLink(mid, true);
+        if (centerLink) {
+          moveIndicator(centerLink, true);
+          scrollToLink(centerLink, true);
+        }
       }
 
+      /* ── 6. scroll infinito: ricicla ai bordi ─────────── */
+      track.addEventListener("scroll", function() {
+        if (!setW) return;
+        var sl = track.scrollLeft;
+        /* se siamo troppo a sinistra: salta avanti di un set */
+        if (sl < setW * 0.4) {
+          track.scrollLeft = sl + setW;
+        }
+        /* se siamo troppo a destra: salta indietro di un set */
+        else if (sl > setW * (COPIES - 1.4)) {
+          track.scrollLeft = sl - setW;
+        }
+      }, { passive: true });
+
+      /* ── 7. click sui link ───────────────────────────── */
+      allNodes.forEach(function(link) {
+        link.addEventListener("click", function(e) {
+          e.preventDefault();
+          var el = document.getElementById(link.dataset.section);
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+          setActive(link.dataset.section, false);
+        });
+      });
+
+      /* ── 8. IntersectionObserver (scroll pagina) ──────── */
       var io = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
-          if (entry.isIntersecting) setActive(entry.target.id);
+          if (entry.isIntersecting) setActive(entry.target.id, true);
         });
-      }, { rootMargin: "-35% 0px -35% 0px", threshold: 0 });
+      }, { rootMargin: "-40% 0px -40% 0px", threshold: 0 });
 
       SECS.forEach(function(id) {
         var el = document.getElementById(id);
         if (el) io.observe(el);
       });
 
-      allLinks.forEach(function(link) {
-        link.addEventListener("click", function(e) {
-          e.preventDefault();
-          var el = document.getElementById(link.dataset.section);
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-          setActive(link.dataset.section);
-        });
-      });
-
-      window.addEventListener("load", function() {
+      /* ── 9. init: centra "Home" della copy centrale ───── */
+      function init() {
         measureSet();
-        var homeRef = null;
-        allLinks.forEach(function(l) {
-          if (l.dataset.section==="hero" && l.dataset.copy==="2") homeRef = l;
+        if (!setW) { setTimeout(init, 50); return; }
+
+        /* scroll iniziale: porta la copy centrale al centro */
+        var homeLink = allNodes.find(function(l) {
+          return l.dataset.section === "hero" && l.dataset.copy === String(CENTER_COPY);
         });
-        if (homeRef) centerLink(homeRef, false);
-        setActive("hero");
+        if (homeLink) {
+          scrollToLink(homeLink, false);
+          moveIndicator(homeLink, false);
+          homeLink.classList.add("active");
+        }
+
+        /* entrata pill con GSAP */
+        gsap.to(pill, {
+          duration: 0.7,
+          delay: 0.4,
+          y: 0,
+          opacity: 1,
+          ease: "back.out(1.4)"
+        });
+      }
+
+      gsap.set(pill, { y: -60, opacity: 0 });
+      window.addEventListener("load", function() {
+        requestAnimationFrame(function() { init(); });
       });
     })();
   </script>
