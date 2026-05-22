@@ -1,20 +1,24 @@
-// Gestione cursore personalizzato
-const dot = document.getElementById('cursor-dot');
-const glow = document.getElementById('cursor-glow');
-
-let mx = 0, my = 0, gx = 0, gy = 0;
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+let rx = cx, ry = cy;
 
 document.addEventListener('mousemove', e => {
-  mx = e.clientX;
-  my = e.clientY;
-  dot.style.left = mx + 'px';
-  dot.style.top = my + 'px';
+  cx = e.clientX; cy = e.clientY;
+  cursor.style.left = cx + 'px';
+  cursor.style.top = cy + 'px';
 });
 
-(function glowLoop() {
-  gx += (mx - gx) * 0.07;
-  gy += (my - gy) * 0.07;
-  glow.style.left = gx + 'px';
-  glow.style.top = gy + 'px';
-  requestAnimationFrame(glowLoop);
-})();
+function animateRing() {
+  rx += (cx - rx) * 0.12;
+  ry += (cy - ry) * 0.12;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, .project-card, .skill-category, .stat-card').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});

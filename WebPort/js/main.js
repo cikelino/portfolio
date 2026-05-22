@@ -1,73 +1,46 @@
-// Punto di ingresso — funzionalità generali
+window.addEventListener('load', () => {
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-// ── TYPING EFFECT ──
-const phrases = [
-  'Full Stack Developer Junior',
-  'React & Node.js',
-  'Microsoft 365 Expert',
-  'UI / UX Enthusiast'
-];
-let phraseIndex = 0;
-const typingEl = document.getElementById('typingText');
-
-function typePhrase() {
-  const phrase = phrases[phraseIndex % phrases.length];
-  let i = 0;
-  typingEl.textContent = '';
-
-  const typeInterval = setInterval(() => {
-    typingEl.textContent += phrase[i];
-    i++;
-    if (i >= phrase.length) {
-      clearInterval(typeInterval);
-      setTimeout(deletePhrase, 2000);
-    }
-  }, 60);
-}
-
-function deletePhrase() {
-  const deleteInterval = setInterval(() => {
-    typingEl.textContent = typingEl.textContent.slice(0, -1);
-    if (!typingEl.textContent.length) {
-      clearInterval(deleteInterval);
-      phraseIndex++;
-      setTimeout(typePhrase, 350);
-    }
-  }, 35);
-}
-
-setTimeout(typePhrase, 2200);
-
-// ── SCROLL TO TOP ──
-const scrollBtn = document.getElementById('scrollTopBtn');
-
-window.addEventListener('scroll', () => {
-  scrollBtn.classList.toggle('visible', window.scrollY > 400);
-});
-
-scrollBtn.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-// ── CONTACT FORM ──
-const form = document.getElementById('contactForm');
-
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  const btn = form.querySelector('button');
-  btn.textContent = 'Invio in corso...';
-  try {
-    const res = await fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { 'Accept': 'application/json' }
+  setTimeout(() => {
+    gsap.to('#loader', {
+      opacity: 0, duration: 0.6, ease: 'power2.out',
+      onComplete: () => {
+        document.getElementById('loader').style.display = 'none';
+        initAnimations();
+      }
     });
-    if (res.ok) {
-      form.reset();
-      document.getElementById('formSuccess').style.display = 'block';
-    }
-    btn.textContent = 'Invia Messaggio →';
-  } catch (err) {
-    btn.textContent = 'Riprova';
+  }, 1800);
+});
+
+// Orb info tooltip toggle
+document.addEventListener('DOMContentLoaded', () => {
+  const orbHelp = document.querySelector('.orb-help');
+  const orbTooltip = document.getElementById('orbTooltip');
+  if (!orbHelp || !orbTooltip) return;
+
+  const tl = gsap.timeline({ paused: true });
+  gsap.set(orbTooltip, { autoAlpha: 0, y: 8, scale: 0.97 });
+  tl.to(orbTooltip, { autoAlpha: 1, y: 0, scale: 1, duration: 0.38, ease: 'power3.out' });
+
+  function openTip() {
+    orbTooltip.classList.add('is-visible');
+    orbHelp.classList.add('is-active');
+    orbHelp.setAttribute('aria-expanded', 'true');
+    tl.play();
   }
+  function closeTip() {
+    orbTooltip.classList.remove('is-visible');
+    orbHelp.classList.remove('is-active');
+    orbHelp.setAttribute('aria-expanded', 'false');
+    tl.reverse();
+  }
+
+  orbHelp.addEventListener('click', e => {
+    e.stopPropagation();
+    orbTooltip.classList.contains('is-visible') ? closeTip() : openTip();
+  });
+  document.addEventListener('click', e => {
+    if (orbTooltip.classList.contains('is-visible') && !orbTooltip.contains(e.target) && e.target !== orbHelp) closeTip();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTip(); });
 });
