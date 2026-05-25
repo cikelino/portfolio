@@ -6,7 +6,7 @@
   <title>Gabriele Sergio — Design Engineer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..400&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 
   <!-- GSAP -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
@@ -242,75 +242,91 @@
 <!-- SKILLS -->
 <section id="skills">
   <div class="skills-inner">
-    <div class="section-label">Competenze</div>
-    <h2 class="section-title" style="margin-top:var(--space-4)">Stack &amp;<br>Expertise.</h2>
-    <div class="skills-grid">
-      <div class="skill-category">
-        <div class="skill-cat-icon">⚡</div>
-        <div class="skill-cat-name">Frontend</div>
-        <div class="skill-list">
-          <span class="skill-chip">React.js</span>
-          <span class="skill-chip">TypeScript</span>
-          <span class="skill-chip">JavaScript</span>
-          <span class="skill-chip">HTML/CSS</span>
-          <span class="skill-chip">Tailwind</span>
-          <span class="skill-chip">GSAP</span>
-        </div>
-      </div>
-      <div class="skill-category">
-        <div class="skill-cat-icon">🎨</div>
-        <div class="skill-cat-name">Design</div>
-        <div class="skill-list">
-          <span class="skill-chip">UX/UI Design</span>
-          <span class="skill-chip">Wireframing</span>
-          <span class="skill-chip">Relume</span>
-          <span class="skill-chip">Design Systems</span>
-          <span class="skill-chip">Microinterazioni</span>
-        </div>
-      </div>
-      <div class="skill-category">
-        <div class="skill-cat-icon">🤖</div>
-        <div class="skill-cat-name">AI &amp; Tools</div>
-        <div class="skill-list">
-          <span class="skill-chip">Anthropic Claude</span>
-          <span class="skill-chip">OpenAI API</span>
-          <span class="skill-chip">Vercel AI SDK</span>
-          <span class="skill-chip">LLM Integration</span>
-          <span class="skill-chip">Chatbot UI</span>
-        </div>
-      </div>
-      <div class="skill-category">
-        <div class="skill-cat-icon">🔧</div>
-        <div class="skill-cat-name">Backend &amp; DevOps</div>
-        <div class="skill-list">
-          <span class="skill-chip">Java</span>
-          <span class="skill-chip">Python</span>
-          <span class="skill-chip">GitHub</span>
-          <span class="skill-chip">Vercel</span>
-          <span class="skill-chip">IONOS</span>
-          <span class="skill-chip">Cloudflare</span>
-        </div>
-      </div>
-      <div class="skill-category">
-        <div class="skill-cat-icon">🖥️</div>
-        <div class="skill-cat-name">Infrastruttura</div>
-        <div class="skill-list">
-          <span class="skill-chip">Linux</span>
-          <span class="skill-chip">VMware vSphere</span>
-          <span class="skill-chip">Microsoft Power Platform</span>
-          <span class="skill-chip">MS Office Suite</span>
-        </div>
-      </div>
-      <div class="skill-category">
-        <div class="skill-cat-icon">🌐</div>
-        <div class="skill-cat-name">Lingue</div>
-        <div class="skill-list">
-          <span class="skill-chip">Italiano — Madrelingua</span>
-          <span class="skill-chip">Inglese — Fluente</span>
-          <span class="skill-chip">Spagnolo — Fluente</span>
-        </div>
+
+    <div class="skills-header">
+      <div>
+        <p class="section-label">Stack &amp; Expertise</p>
+        <h2 class="section-title" style="margin-top:var(--space-3)">Skills &amp;<br><em>Tools.</em></h2>
       </div>
     </div>
+
+    <div class="skills-stage-wrap">
+
+      <div class="skills-cats skills-cats--left">
+        <div class="cat-block">
+          <div class="cat-name"><span class="cat-name-rule"></span><span>Frontend</span></div>
+          <div class="cat-skills">
+            <span class="cat-skill">React.js /</span>
+            <span class="cat-skill">TypeScript /</span>
+            <span class="cat-skill">JavaScript /</span>
+            <span class="cat-skill">HTML / CSS /</span>
+            <span class="cat-skill">Tailwind /</span>
+            <span class="cat-skill">GSAP /</span>
+            <span class="cat-skill">Vite /</span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-name"><span class="cat-name-rule"></span><span>Design</span></div>
+          <div class="cat-skills">
+            <span class="cat-skill">Figma /</span>
+            <span class="cat-skill">UX / UI /</span>
+            <span class="cat-skill">Wireframing /</span>
+            <span class="cat-skill">Design Systems /</span>
+            <span class="cat-skill">Microinterazioni /</span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-name"><span class="cat-name-rule"></span><span>Lingue</span></div>
+          <div class="cat-skills">
+            <span class="cat-skill">Italiano — Madrelingua /</span>
+            <span class="cat-skill">Inglese — Fluente /</span>
+            <span class="cat-skill">Spagnolo — Fluente /</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="skills-orb" id="stage">
+        <p class="skills-meta skills-meta--orb">Drag &amp; drop the logos ↓</p>
+        <svg id="connSvg"></svg>
+        <div class="ellipse-wrap" id="ellipseEl"></div>
+      </div>
+
+      <div class="skills-cats skills-cats--right">
+        <div class="cat-block">
+          <div class="cat-name"><span class="cat-name-rule"></span><span>AI &amp; LLM</span></div>
+          <div class="cat-skills">
+            <span class="cat-skill">/ Claude API</span>
+            <span class="cat-skill">/ OpenAI API</span>
+            <span class="cat-skill">/ Vercel AI SDK</span>
+            <span class="cat-skill">/ LLM Integration</span>
+            <span class="cat-skill">/ Prompt Eng.</span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-name"><span class="cat-name-rule"></span><span>Backend</span></div>
+          <div class="cat-skills">
+            <span class="cat-skill">/ Java</span>
+            <span class="cat-skill">/ Python</span>
+            <span class="cat-skill">/ Node.js</span>
+            <span class="cat-skill">/ SQL</span>
+            <span class="cat-skill">/ Cloudflare</span>
+            <span class="cat-skill">/ Vercel</span>
+          </div>
+        </div>
+        <div class="cat-block">
+          <div class="cat-name"><span class="cat-name-rule"></span><span>Infrastruttura</span></div>
+          <div class="cat-skills">
+            <span class="cat-skill">/ Linux</span>
+            <span class="cat-skill">/ VMware vSphere</span>
+            <span class="cat-skill">/ Power Platform</span>
+            <span class="cat-skill">/ GitHub</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
   </div>
 </section>
 
@@ -455,6 +471,7 @@
 <script src="js/canvas.js"></script>
 <script src="js/animations.js"></script>
 <script src="js/main.js"></script>
+<script src="js/skills-orb.js"></script>
 
 </body>
 </html>
