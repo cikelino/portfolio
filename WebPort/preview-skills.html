@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skills Preview — Gabriele Sergio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<style>
+:root {
+  --teal:        #826976;
+  --teal-light:  #a88a97;
+  --mauve:       #10554e;
+  --mauve-light: #1a7a70;
+  --sand:        #ffdead;
+  --sand-dim:    #e8c98a;
+  --black:       #060606;
+  --dark-1:      #111111;
+  --dark-2:      #161616;
+  --dark-3:      #1d1d1d;
+  --border:      rgba(255,255,255,0.06);
+  --text:        #e8e6e1;
+  --text-muted:  #8a8884;
+  --text-faint:  #4a4948;
+  --font-d: 'Syne', sans-serif;
+  --font-b: 'DM Sans', sans-serif;
+  --ease:   cubic-bezier(0.16,1,0.3,1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-b);
+  color: var(--text);
+  background: var(--black);
+  padding: 80px 48px 120px;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── HEADER ── */
+.sec-label {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--teal-light); margin-bottom: 18px;
+}
+.sec-label::before { content: ''; width: 24px; height: 1px; background: var(--teal-light); }
+.sec-title {
+  font-family: var(--font-d);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 800; line-height: 0.95;
+  letter-spacing: -0.05em;
+  margin-bottom: 56px;
+}
+.sec-title em { font-style: normal; color: var(--sand); }
+
+/* ── BENTO GRID ── */
+.bento {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1.15fr;
+  grid-template-rows: 300px 230px 170px;
+  gap: 14px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.c-frontend { grid-area: 1 / 1 / 3 / 2; }
+.c-design   { grid-area: 1 / 2 / 2 / 3; }
+.c-ai       { grid-area: 1 / 3 / 3 / 4; }
+.c-backend  { grid-area: 2 / 2 / 3 / 3; }
+.c-infra    { grid-area: 3 / 1 / 4 / 2; }
+.c-lingue   { grid-area: 3 / 2 / 4 / 4; }
+
+/* ── BASE CARD ── */
+.card {
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--dark-2);
+  padding: 26px 28px;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s var(--ease);
+}
+.card:hover { transform: translateY(-5px) scale(1.008); }
+
+/* noise texture per card */
+.card::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E");
+  opacity: 0.018; pointer-events: none; z-index: 0;
+}
+
+/* card ambient glows */
+.c-frontend { background: linear-gradient(145deg, #141e1c 0%, var(--dark-2) 60%); }
+.c-frontend::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: radial-gradient(ellipse 70% 50% at 0% 100%, rgba(16,85,78,0.28) 0%, transparent 65%);
+  opacity: .7; transition: opacity .4s; pointer-events: none;
+}
+.c-frontend:hover::before { opacity: 1; }
+.c-frontend:hover { border-color: rgba(16,85,78,0.55); box-shadow: 0 24px 70px rgba(16,85,78,0.15), 0 0 0 1px rgba(16,85,78,0.12); }
+
+.c-ai { background: linear-gradient(145deg, #18141a 0%, var(--dark-2) 60%); }
+.c-ai::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: radial-gradient(ellipse 70% 50% at 100% 0%, rgba(130,105,118,0.32) 0%, transparent 65%);
+  opacity: .7; transition: opacity .4s; pointer-events: none;
+}
+.c-ai:hover::before { opacity: 1; }
+.c-ai:hover { border-color: rgba(130,105,118,0.55); box-shadow: 0 24px 70px rgba(130,105,118,0.15), 0 0 0 1px rgba(130,105,118,0.12); }
+
+.c-design::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: radial-gradient(ellipse 80% 60% at 100% 0%, rgba(255,222,173,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+.c-design:hover { border-color: rgba(255,222,173,0.3); box-shadow: 0 20px 50px rgba(255,222,173,0.07); }
+.c-backend:hover { border-color: rgba(26,122,112,0.4); box-shadow: 0 16px 40px rgba(26,122,112,0.1); }
+.c-infra:hover  { border-color: rgba(130,105,118,0.35); }
+.c-lingue:hover { border-color: rgba(130,105,118,0.35); }
+
+/* ── CARD HEADER ── */
+.ch {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px; position: relative; z-index: 1;
+}
+.ch-icon {
+  width: 44px; height: 44px; border-radius: 13px;
+  background: var(--dark-3); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; flex-shrink: 0;
+  transition: background .35s, border-color .35s, transform .35s var(--ease);
+}
+.c-frontend:hover .ch-icon { background: rgba(16,85,78,0.22); border-color: rgba(16,85,78,0.45); transform: scale(1.08) rotate(-4deg); }
+.c-ai:hover .ch-icon       { background: rgba(130,105,118,0.22); border-color: rgba(130,105,118,0.45); transform: scale(1.08) rotate(4deg); }
+.c-design:hover .ch-icon   { background: rgba(255,222,173,0.14); border-color: rgba(255,222,173,0.3); transform: scale(1.08); }
+.c-backend:hover .ch-icon  { background: rgba(26,122,112,0.18); border-color: rgba(26,122,112,0.4); transform: scale(1.08); }
+
+.ch-name {
+  font-family: var(--font-d);
+  font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em;
+}
+.ch-badge {
+  margin-left: auto;
+  font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 4px 11px; border-radius: 999px; border: 1px solid;
+  flex-shrink: 0;
+}
+.b-teal  { border-color: rgba(16,85,78,0.5);     color: var(--mauve-light); background: rgba(16,85,78,0.12); }
+.b-sand  { border-color: rgba(255,222,173,0.3);   color: var(--sand-dim);    background: rgba(255,222,173,0.07); }
+.b-mauve { border-color: rgba(130,105,118,0.45);  color: var(--teal-light);  background: rgba(130,105,118,0.12); }
+
+/* ── CHIPS ── */
+.chips {
+  display: flex; flex-wrap: wrap; gap: 7px;
+  position: relative; z-index: 1;
+}
+.chip {
+  font-size: 0.71rem; font-weight: 500;
+  padding: 6px 14px; border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.025);
+  transition: background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
+  opacity: 0; transform: translateY(10px) scale(0.95);
+}
+.chip.in { opacity: 1; transform: translateY(0) scale(1); }
+.chip:hover { transform: translateY(-2px) scale(1.04) !important; }
+
+/* chip accent on parent hover */
+.c-frontend:hover .chip { border-color: rgba(16,85,78,0.28); color: var(--text); }
+.c-frontend:hover .chip:hover { background: rgba(16,85,78,0.2); border-color: rgba(16,85,78,0.6); color: #fff; }
+.c-ai:hover .chip       { border-color: rgba(130,105,118,0.28); color: var(--text); }
+.c-ai:hover .chip:hover { background: rgba(130,105,118,0.2); border-color: rgba(130,105,118,0.6); color: #fff; }
+.c-design:hover .chip   { border-color: rgba(255,222,173,0.2); color: var(--text); }
+.c-design:hover .chip:hover { background: rgba(255,222,173,0.1); border-color: rgba(255,222,173,0.4); color: var(--sand); }
+.c-backend:hover .chip  { border-color: rgba(26,122,112,0.28); color: var(--text); }
+.c-backend:hover .chip:hover { background: rgba(26,122,112,0.18); border-color: rgba(26,122,112,0.55); color: #fff; }
+.c-lingue:hover .chip   { border-color: rgba(130,105,118,0.3); color: var(--text); }
+
+/* ── FRONTEND — floating code bg ── */
+.code-ghost {
+  position: absolute; bottom: -8px; right: -4px;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 0.48rem; line-height: 1.75;
+  color: var(--mauve-light); white-space: pre;
+  pointer-events: none; z-index: 0;
+  opacity: 0.07; transition: opacity .4s;
+  user-select: none;
+}
+.c-frontend:hover .code-ghost { opacity: 0.13; }
+
+/* proficiency dots */
+.prof-dots {
+  display: flex; gap: 5px; margin-bottom: 16px;
+  position: relative; z-index: 1;
+}
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--dark-3); border: 1px solid var(--border);
+  transition: background .3s, border-color .3s;
+}
+.dot.filled-teal  { background: var(--mauve-light); border-color: var(--mauve); }
+.dot.filled-mauve { background: var(--teal-light);  border-color: var(--teal); }
+.dot.filled-sand  { background: var(--sand-dim);    border-color: var(--sand); }
+
+/* ── AI CARD — mini canvas + stats ── */
+.ai-canvas-wrap {
+  width: 100%; height: 82px; border-radius: 12px;
+  background: rgba(130,105,118,0.06); border: 1px solid rgba(130,105,118,0.14);
+  margin-bottom: 16px; position: relative; overflow: hidden; z-index: 1;
+}
+#aiCanvas { width: 100%; height: 100%; display: block; }
+
+.ai-stats {
+  display: flex; gap: 10px; margin-bottom: 16px;
+  position: relative; z-index: 1;
+}
+.ai-stat {
+  flex: 1; border-radius: 12px;
+  background: rgba(130,105,118,0.08);
+  border: 1px solid rgba(130,105,118,0.14);
+  padding: 10px 12px; text-align: center;
+  transition: background .3s, border-color .3s;
+}
+.c-ai:hover .ai-stat { background: rgba(130,105,118,0.14); border-color: rgba(130,105,118,0.3); }
+.ai-stat .n { font-family: var(--font-d); font-size: 1.35rem; font-weight: 800; color: var(--sand); letter-spacing: -0.04em; display: block; }
+.ai-stat .l { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-faint); }
+
+/* ── DESIGN CARD — swatches ── */
+.swatches {
+  display: flex; gap: 6px; align-items: center;
+  margin-bottom: 16px; position: relative; z-index: 1;
+}
+.sw {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: transform .25s var(--ease), width .25s var(--ease), box-shadow .25s;
+}
+.c-design:hover .sw { transform: scale(1.15); }
+.c-design:hover .sw:hover { transform: scale(1.3); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+.sw-1 { background: linear-gradient(135deg, #826976, #c4a0b0); }
+.sw-2 { background: linear-gradient(135deg, #10554e, #1a7a70); }
+.sw-3 { background: linear-gradient(135deg, #ffdead, #e8c98a); }
+.sw-4 { background: linear-gradient(135deg, #2a2035, #4a3060); }
+.sw-5 { background: linear-gradient(135deg, #1a1a2e, #0f3460); width: 22px; height: 22px; opacity: .55; }
+
+/* ── BACKEND CARD — terminal ── */
+.terminal {
+  background: rgba(0,0,0,0.35); border: 1px solid rgba(26,122,112,0.2);
+  border-radius: 10px; padding: 10px 14px;
+  margin-bottom: 14px; position: relative; z-index: 1;
+  font-family: 'Courier New', monospace;
+}
+.t-bar {
+  display: flex; gap: 6px; margin-bottom: 8px; padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.t-dot { width: 9px; height: 9px; border-radius: 50%; }
+.t-dot-r { background: rgba(255,95,87,0.7); }
+.t-dot-y { background: rgba(255,189,46,0.7); }
+.t-dot-g { background: rgba(40,200,64,0.7); }
+.t-line { display: flex; align-items: center; gap: 8px; padding: 2.5px 0; }
+.t-prompt { color: var(--mauve-light); font-size: 0.68rem; }
+.t-cmd { color: var(--text-muted); font-size: 0.68rem; }
+.t-ver {
+  margin-left: auto; font-size: 0.58rem;
+  color: var(--mauve-light); background: rgba(26,122,112,0.12);
+  border: 1px solid rgba(26,122,112,0.25); padding: 2px 8px; border-radius: 4px;
+}
+.t-cursor {
+  display: inline-block; width: 7px; height: 12px;
+  background: var(--mauve-light); margin-left: 2px; border-radius: 1px;
+  animation: blink 1s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── INFRA CARD ── */
+.infra-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 7px; position: relative; z-index: 1;
+}
+.infra-item {
+  background: var(--dark-3); border: 1px solid var(--border);
+  border-radius: 10px; padding: 9px 13px;
+  font-size: 0.7rem; color: var(--text-muted);
+  display: flex; align-items: center; gap: 7px;
+  transition: background .3s, border-color .3s, color .3s;
+}
+.infra-item::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; transition: background .3s; }
+.c-infra:hover .infra-item { border-color: rgba(130,105,118,0.3); color: var(--text); }
+.c-infra:hover .infra-item::before { background: var(--teal-light); }
+
+/* ── LINGUE CARD ── */
+.lang-row {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  position: relative; z-index: 1;
+}
+.lang-item {
+  display: flex; align-items: center; gap: 13px;
+  background: var(--dark-3); border: 1px solid var(--border);
+  border-radius: 14px; padding: 13px 20px;
+  flex: 1; min-width: 130px;
+  transition: all .35s var(--ease);
+  position: relative; overflow: hidden;
+}
+.lang-item::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(130,105,118,0.06), transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.c-lingue:hover .lang-item { border-color: rgba(130,105,118,0.4); transform: translateY(-2px); }
+.c-lingue:hover .lang-item::before { opacity: 1; }
+.c-lingue:hover .lang-item:hover { background: rgba(130,105,118,0.1); border-color: rgba(130,105,118,0.6); }
+.lang-flag { font-size: 1.5rem; flex-shrink: 0; }
+.lang-name { font-family: var(--font-d); font-size: 0.88rem; font-weight: 700; }
+.lang-level { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-faint); margin-top: 2px; }
+.lang-bar { height: 2px; border-radius: 2px; margin-top: 6px; background: var(--dark-2); overflow: hidden; }
+.lang-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--teal), var(--sand)); transition: width .6s var(--ease); }
+</style>
+</head>
+<body>
+<div style="max-width:1180px; margin:0 auto;">
+
+  <!-- Header -->
+  <div class="sec-label">Competenze</div>
+  <h2 class="sec-title">Stack &<br><em>Expertise.</em></h2>
+
+  <!-- Bento Grid -->
+  <div class="bento">
+
+    <!-- ── FRONTEND ── -->
+    <div class="card c-frontend">
+      <div class="code-ghost">const ui = {
+  framework: 'React',
+  types:  'TypeScript',
+  styles: 'Tailwind',
+  motion: 'GSAP 3',
+  build:  'Vite',
+}
+
+gsap.from('.hero', {
+  y: 60, opacity: 0,
+  stagger: 0.12,
+  ease: 'power3.out',
+})
+
+// ScrollTrigger
+ScrollTrigger.create({
+  trigger: '#work',
+  pin: true,
+  scrub: 1.4,
+})</div>
+      <div class="ch">
+        <div class="ch-icon">⚡</div>
+        <div class="ch-name">Frontend</div>
+        <div class="ch-badge b-teal">Core Stack</div>
+      </div>
+      <div class="prof-dots">
+        <div class="dot filled-teal"></div><div class="dot filled-teal"></div>
+        <div class="dot filled-teal"></div><div class="dot filled-teal"></div>
+        <div class="dot filled-teal"></div>
+      </div>
+      <div class="chips">
+        <span class="chip">React.js</span>
+        <span class="chip">TypeScript</span>
+        <span class="chip">JavaScript</span>
+        <span class="chip">HTML / CSS</span>
+        <span class="chip">Tailwind</span>
+        <span class="chip">GSAP</span>
+      </div>
+    </div>
+
+    <!-- ── DESIGN ── -->
+    <div class="card c-design">
+      <div class="ch">
+        <div class="ch-icon">🎨</div>
+        <div class="ch-name">Design</div>
+        <div class="ch-badge b-sand">Visual</div>
+      </div>
+      <div class="swatches">
+        <div class="sw sw-1"></div><div class="sw sw-2"></div>
+        <div class="sw sw-3"></div><div class="sw sw-4"></div>
+        <div class="sw sw-5"></div>
+      </div>
+      <div class="chips">
+        <span class="chip">UX/UI Design</span>
+        <span class="chip">Wireframing</span>
+        <span class="chip">Relume</span>
+        <span class="chip">Design Systems</span>
+        <span class="chip">Microinterazioni</span>
+      </div>
+    </div>
+
+    <!-- ── AI & LLM ── -->
+    <div class="card c-ai">
+      <div class="ch">
+        <div class="ch-icon">🤖</div>
+        <div class="ch-name">AI &amp; LLM</div>
+        <div class="ch-badge b-mauve">Featured</div>
+      </div>
+      <div class="ai-canvas-wrap">
+        <canvas id="aiCanvas"></canvas>
+      </div>
+      <div class="ai-stats">
+        <div class="ai-stat"><span class="n">4+</span><span class="l">API</span></div>
+        <div class="ai-stat"><span class="n">LLM</span><span class="l">Integrated</span></div>
+        <div class="ai-stat"><span class="n">∞</span><span class="l">Streaming</span></div>
+      </div>
+      <div class="chips">
+        <span class="chip">Anthropic Claude</span>
+        <span class="chip">OpenAI API</span>
+        <span class="chip">Vercel AI SDK</span>
+        <span class="chip">LLM Integration</span>
+        <span class="chip">Chatbot UI</span>
+      </div>
+    </div>
+
+    <!-- ── BACKEND ── -->
+    <div class="card c-backend">
+      <div class="ch">
+        <div class="ch-icon">🔧</div>
+        <div class="ch-name">Backend &amp; DevOps</div>
+      </div>
+      <div class="terminal">
+        <div class="t-bar">
+          <div class="t-dot t-dot-r"></div>
+          <div class="t-dot t-dot-y"></div>
+          <div class="t-dot t-dot-g"></div>
+        </div>
+        <div class="t-line"><span class="t-prompt">~$</span><span class="t-cmd">java --version</span><span class="t-ver">21 LTS</span></div>
+        <div class="t-line"><span class="t-prompt">~$</span><span class="t-cmd">python --version</span><span class="t-ver">3.12</span></div>
+        <div class="t-line"><span class="t-prompt">~$</span><span class="t-cmd">git push origin main</span><span class="t-ver" style="color:var(--mauve-light)">✓ ok</span></div>
+        <div class="t-line"><span class="t-prompt">~$</span><span class="t-cursor"></span></div>
+      </div>
+      <div class="chips">
+        <span class="chip">Java</span><span class="chip">Python</span>
+        <span class="chip">GitHub</span><span class="chip">Vercel</span>
+        <span class="chip">IONOS</span><span class="chip">Cloudflare</span>
+      </div>
+    </div>
+
+    <!-- ── INFRASTRUTTURA ── -->
+    <div class="card c-infra">
+      <div class="ch">
+        <div class="ch-icon">🖥️</div>
+        <div class="ch-name">Infrastruttura</div>
+      </div>
+      <div class="infra-grid">
+        <div class="infra-item">Linux</div>
+        <div class="infra-item">VMware vSphere</div>
+        <div class="infra-item">Power Platform</div>
+        <div class="infra-item">MS Office Suite</div>
+      </div>
+    </div>
+
+    <!-- ── LINGUE ── -->
+    <div class="card c-lingue">
+      <div class="ch">
+        <div class="ch-icon">🌐</div>
+        <div class="ch-name">Lingue</div>
+      </div>
+      <div class="lang-row">
+        <div class="lang-item">
+          <span class="lang-flag">🇮🇹</span>
+          <div>
+            <div class="lang-name">Italiano</div>
+            <div class="lang-level">Madrelingua</div>
+            <div class="lang-bar"><div class="lang-bar-fill" style="width:100%"></div></div>
+          </div>
+        </div>
+        <div class="lang-item">
+          <span class="lang-flag">🇬🇧</span>
+          <div>
+            <div class="lang-name">Inglese</div>
+            <div class="lang-level">Fluente — C1</div>
+            <div class="lang-bar"><div class="lang-bar-fill" style="width:88%"></div></div>
+          </div>
+        </div>
+        <div class="lang-item">
+          <span class="lang-flag">🇪🇸</span>
+          <div>
+            <div class="lang-name">Spagnolo</div>
+            <div class="lang-level">Fluente — B2</div>
+            <div class="lang-bar"><div class="lang-bar-fill" style="width:78%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /bento -->
+</div>
+
+<script>
+// ── CHIP ENTRANCE ──
+const cards = document.querySelectorAll('.card');
+cards.forEach((card, ci) => {
+  card.querySelectorAll('.chip').forEach((chip, i) => {
+    setTimeout(() => chip.classList.add('in'), 120 + ci * 60 + i * 55);
+  });
+});
+
+// ── AI CANVAS ──
+const canvas = document.getElementById('aiCanvas');
+const ctx = canvas.getContext('2d');
+let t = 0, raf;
+
+function resizeCanvas() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function drawAI() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  ctx.clearRect(0, 0, w, h);
+  t += 0.014;
+
+  const nodes = [
+    { x: w*.14, y: h*.5, lbl: 'LLM', alt: false },
+    { x: w*.33, y: h*.22, lbl: 'API', alt: true },
+    { x: w*.52, y: h*.72, lbl: 'UI', alt: false },
+    { x: w*.71, y: h*.28, lbl: 'SDK', alt: true },
+    { x: w*.88, y: h*.62, lbl: 'AI', alt: false },
+    { x: w*.5,  y: h*.48, lbl: '✦', alt: true, core: true },
+  ];
+
+  // connections
+  nodes.forEach((a, i) => nodes.forEach((b, j) => {
+    if (i >= j) return;
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (d > w * 0.52) return;
+    const alpha = (0.06 + Math.sin(t * 0.8 + i + j) * 0.03) * (1 - d / (w * 0.52));
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = `rgba(130,105,118,${alpha})`; ctx.lineWidth = 1; ctx.stroke();
+  }));
+
+  // nodes
+  nodes.forEach((nd, i) => {
+    const pulse = Math.sin(t * 1.4 + i * 0.8) * 1.5;
+    const r = (nd.core ? 5 : 3.5) + pulse;
+    const a = 0.65 + Math.sin(t * 0.9 + i) * 0.25;
+    ctx.beginPath(); ctx.arc(nd.x, nd.y, r, 0, Math.PI*2);
+    ctx.fillStyle = nd.alt ? `rgba(255,222,173,${a})` : `rgba(130,105,118,${a*1.2})`;
+    ctx.fill();
+    ctx.fillStyle = `rgba(232,230,225,0.55)`;
+    ctx.font = '500 8.5px DM Sans';
+    ctx.textAlign = 'center';
+    if (!nd.core) ctx.fillText(nd.lbl, nd.x, nd.y - 8);
+  });
+
+  raf = requestAnimationFrame(drawAI);
+}
+
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); });
+drawAI();
+</script>
+</body>
+</html>

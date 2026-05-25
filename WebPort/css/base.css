@@ -44,7 +44,6 @@ body.cursor-hover #cursor-ring { width: 60px; height: 60px; border-color: var(--
   font-size: var(--text-2xl);
   font-weight: 700;
   letter-spacing: -0.02em;
-  overflow: hidden;
 }
 #loader-name span { display: inline-block; }
 #loader-bar {

@@ -29,7 +29,7 @@
 <!-- Loader -->
 <div id="loader">
   <div id="loader-name">
-    <span id="l1">G</span><span id="l2">a</span><span id="l3">b</span><span id="l4">r</span><span id="l5">i</span><span id="l6">e</span><span id="l7">l</span><span id="l8">e</span>
+    <span id="l1">G</span><span id="l2">a</span><span id="l3">b</span><span id="l4">r</span><span id="l5">i</span><span id="l6">e</span><span id="l7">l</span><span id="l8">e</span><span id="l9">&nbsp;</span><span id="l10">S</span><span id="l11">e</span><span id="l12">r</span><span id="l13">g</span><span id="l14">i</span><span id="l15">o</span>
   </div>
   <div id="loader-bar"></div>
 </div>
@@ -115,84 +115,96 @@
   </div>
 </div>
 
-<!-- WORK — HORIZONTAL SCROLL -->
+<!-- WORK — CIRCULAR CAROUSEL -->
 <section id="work">
   <div class="work-header">
     <div>
       <div class="section-label">Progetti Selezionati</div>
       <h2 class="section-title">Il mio<br>lavoro.</h2>
     </div>
-    <div class="h-scroll-hint">
-      <div class="scroll-arrow"><span></span><span></span><span></span></div>
-      Scorri orizzontalmente
+    <p class="carousel-hint"><span class="ch-arrow">←</span> drag to spin <span class="ch-arrow">→</span></p>
+  </div>
+
+  <div class="proj-carousel-wrap">
+    <div class="proj-stage" id="projStage">
+      <div class="proj-ring" id="projRing">
+
+        <article class="proj-card" data-index="0">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c1"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">01 / 05</div>
+            <div class="proj-name">WowChePrezzi.it</div>
+            <div class="proj-role">Frontend Dev &amp; UX/UI</div>
+            <div class="proj-tags">
+              <span class="tag">React.js</span><span class="tag">TypeScript</span><span class="tag">Tailwind</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-index="1">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c2"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">02 / 05</div>
+            <div class="proj-name">Glami Inside Fashion</div>
+            <div class="proj-role">Full-Stack &amp; UX/UI</div>
+            <div class="proj-tags">
+              <span class="tag">React</span><span class="tag">Java</span><span class="tag">Cloudflare</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-index="2">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c3"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">03 / 05</div>
+            <div class="proj-name">Office Seat Booking</div>
+            <div class="proj-role">UX/UI Designer</div>
+            <div class="proj-tags">
+              <span class="tag">UX/UI</span><span class="tag">Figma</span><span class="tag">Design System</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-index="3">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c4"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">04 / 05</div>
+            <div class="proj-name">Portfolio 3D</div>
+            <div class="proj-role">Creative Developer</div>
+            <div class="proj-tags">
+              <span class="tag">GSAP</span><span class="tag">Three.js</span><span class="tag">CSS</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-index="4">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c5"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">05 / 05</div>
+            <div class="proj-name">AI Chat Interface</div>
+            <div class="proj-role">Full-Stack &amp; AI</div>
+            <div class="proj-tags">
+              <span class="tag">Claude API</span><span class="tag">React</span><span class="tag">Node.js</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="carousel-nav">
+      <button class="carousel-btn" id="prevBtn" aria-label="Precedente">←</button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="nextBtn" aria-label="Successivo">→</button>
     </div>
   </div>
-  <div class="h-scroll-container">
-    <div class="h-scroll-track" id="hScrollTrack">
 
-      <!-- Project 1: WowChePrezzi -->
-      <div class="project-card">
-        <div class="project-card-media">
-          <canvas class="proj-canvas" id="c1"></canvas>
-        </div>
-        <div class="project-card-body">
-          <div class="project-num">01 / 03</div>
-          <div class="project-name">WowChePrezzi.it</div>
-          <div class="project-role">Frontend Dev &amp; UX/UI Designer</div>
-          <p class="project-desc">Sito comparatore prezzi ispirato ai principali aggregatori. Wireframe, user-flow, interfaccia responsive con filtri, ricerca prodotti e confronto offerte.</p>
-          <div class="project-tags">
-            <span class="tag">React.js</span>
-            <span class="tag">TypeScript</span>
-            <span class="tag">Tailwind</span>
-            <span class="tag">UX/UI</span>
-          </div>
-          <div class="project-progress"><span></span></div>
-          <div class="project-glance"><span>Product discovery</span><span>Frontend motion</span></div>
-        </div>
-      </div>
-
-      <!-- Project 2: Glami -->
-      <div class="project-card">
-        <div class="project-card-media">
-          <canvas class="proj-canvas" id="c2"></canvas>
-        </div>
-        <div class="project-card-body">
-          <div class="project-num">02 / 03</div>
-          <div class="project-name">Glami Inside Fashion</div>
-          <div class="project-role">Full-Stack Dev &amp; UX/UI Designer</div>
-          <p class="project-desc">Sito web per agenzia di formazione nel settore moda. Backend Java, frontend React, integrazione Cloudflare, Resend, Iubenda e deploy su IONOS.</p>
-          <div class="project-tags">
-            <span class="tag">React</span>
-            <span class="tag">Java</span>
-            <span class="tag">Cloudflare</span>
-            <span class="tag">Full-Stack</span>
-          </div>
-          <div class="project-progress"><span></span></div>
-          <div class="project-glance"><span>Brand platform</span><span>Deploy &amp; systems</span></div>
-        </div>
-      </div>
-
-      <!-- Project 3: Seat Booking -->
-      <div class="project-card">
-        <div class="project-card-media">
-          <canvas class="proj-canvas" id="c3"></canvas>
-        </div>
-        <div class="project-card-body">
-          <div class="project-num">03 / 03</div>
-          <div class="project-name">Office Seat Booking</div>
-          <div class="project-role">UX/UI Designer</div>
-          <p class="project-desc">Sistema di prenotazione e turnazione posti smart working. Mappa stilizzata dell'ufficio, interfaccia di prenotazione, visualizzazione disponibilità e notifiche di stato.</p>
-          <div class="project-tags">
-            <span class="tag">UX/UI</span>
-            <span class="tag">Smart Working</span>
-            <span class="tag">Wireframe</span>
-            <span class="tag">Design System</span>
-          </div>
-          <div class="project-progress"><span></span></div>
-          <div class="project-glance"><span>Spatial UX</span><span>Booking flow</span></div>
-        </div>
-      </div>
-
+  <!-- Detail Overlay -->
+  <div id="projOverlay" class="proj-overlay" aria-hidden="true">
+    <div class="proj-overlay-backdrop" id="overlayBackdrop"></div>
+    <div class="proj-overlay-panel">
+      <button class="proj-overlay-close" id="overlayClose" aria-label="Chiudi">✕</button>
+      <div class="proj-overlay-content" id="overlayContent"></div>
     </div>
   </div>
 </section>
@@ -472,6 +484,7 @@
 <script src="js/animations.js"></script>
 <script src="js/main.js"></script>
 <script src="js/skills-orb.js"></script>
+<script src="js/proj-carousel.js"></script>
 
 </body>
 </html>
