@@ -82,11 +82,21 @@ class Particle {
   }
 }
 
-const particles = Array.from({ length: 130 }, () => new Particle());
+const particles = Array.from({ length: 60 }, () => new Particle());
 
-(function animateParticles() {
+let particlesRunning = false;
+
+function animateParticles() {
+  if (!particlesRunning) return;
   ctx.clearRect(0, 0, W, H);
   particles.forEach(p => { p.tick(); p.draw(); });
   ctx.globalAlpha = 1;
   requestAnimationFrame(animateParticles);
-})();
+}
+
+// Start/pause based on hero visibility
+new IntersectionObserver(([e]) => {
+  const wasRunning = particlesRunning;
+  particlesRunning = e.isIntersecting;
+  if (particlesRunning && !wasRunning) animateParticles();
+}, { threshold: 0.01 }).observe(cv);

@@ -6,6 +6,13 @@ function drawProjectCanvas(id, colorA, colorB, type) {
   canvas.height = canvas.offsetHeight || 300;
   const w = canvas.width, h = canvas.height;
 
+  // Only animate when canvas is in viewport
+  let active = false;
+  new IntersectionObserver(([e]) => {
+    active = e.isIntersecting;
+    if (active) draw(0);
+  }, { threshold: 0.05 }).observe(canvas);
+
   function draw(t) {
     ctx.clearRect(0, 0, w, h);
     const bg = ctx.createLinearGradient(0, 0, w, h);
@@ -55,9 +62,8 @@ function drawProjectCanvas(id, colorA, colorB, type) {
       ctx.font = '11px monospace'; ctx.fillStyle = 'rgba(255,255,255,0.25)';
       ctx.fillText('POSTAZIONE DISPONIBILE', 50, h - 30);
     }
-    requestAnimationFrame(() => draw(t + 0.02));
+    if (active) requestAnimationFrame(() => draw(t + 0.02));
   }
-  draw(0);
 }
 
 function initHeroCanvas() {

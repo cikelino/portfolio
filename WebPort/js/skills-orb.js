@@ -199,7 +199,10 @@
   /* ─── PHYSICS LOOP ──────────────────────────────────────────── */
   const FRIC = 0.978, BOUNCE = 0.40, AMP = 0.010;
 
+  let orbPaused = true;
+
   function loop() {
+    if (orbPaused) return;
     const t = Date.now() * 0.001;
     chips.forEach((s, i) => {
       if (s.grabbed) return;
@@ -231,6 +234,12 @@
     requestAnimationFrame(loop);
   }
 
+  // Pause physics when skills section is off-screen
+  new IntersectionObserver(([e]) => {
+    orbPaused = !e.isIntersecting;
+    if (!orbPaused) requestAnimationFrame(loop);
+  }, { threshold: 0.05 }).observe(stage);
+
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -238,7 +247,7 @@
   });
 
   buildOrb();
-  loop();
+  requestAnimationFrame(loop);
 
   // Re-draw connectors after full page load + GSAP ScrollTrigger init settle
   window.addEventListener('load', () => setTimeout(drawConnectors, 2600));
