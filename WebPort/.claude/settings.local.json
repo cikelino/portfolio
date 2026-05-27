@@ -10,7 +10,11 @@
       "mcp__Claude_in_Chrome__tabs_context_mcp",
       "Bash(npm --version)",
       "Bash(npm install *)",
-      "Bash(npx vite *)"
+      "Bash(npx vite *)",
+      "Bash(node -e \"require\\('./node_modules/astro/package.json'\\).version\")",
+      "Bash(npx astro *)",
+      "Bash(cp css/*.css src/styles/)",
+      "Bash(cp js/*.js src/scripts/)"
     ]
   }
 }

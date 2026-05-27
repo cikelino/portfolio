@@ -1,0 +1,94 @@
+---
+---
+<section id="work">
+  <div class="work-header">
+    <div>
+      <div class="section-label">Progetti Selezionati</div>
+      <h2 class="section-title">Il mio<br />lavoro.</h2>
+    </div>
+    <p class="carousel-hint"><span class="ch-arrow">←</span> drag to spin <span class="ch-arrow">→</span></p>
+  </div>
+
+  <div class="proj-carousel-wrap">
+    <div class="proj-stage" id="projStage">
+      <div class="proj-ring" id="projRing">
+
+        <article class="proj-card" data-index="0">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c1"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">01 / 05</div>
+            <div class="proj-name">WowChePrezzi.it</div>
+            <div class="proj-role">Frontend Dev &amp; UX/UI</div>
+            <div class="proj-tags">
+              <span class="tag">React.js</span><span class="tag">TypeScript</span><span class="tag">Tailwind</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-index="1">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c2"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">02 / 05</div>
+            <div class="proj-name">Glami Inside Fashion</div>
+            <div class="proj-role">Full-Stack &amp; UX/UI</div>
+            <div class="proj-tags">
+              <span class="tag">React</span><span class="tag">Java</span><span class="tag">Cloudflare</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-index="2">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c3"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">03 / 05</div>
+            <div class="proj-name">Office Seat Booking</div>
+            <div class="proj-role">UX/UI Designer</div>
+            <div class="proj-tags">
+              <span class="tag">UX/UI</span><span class="tag">Figma</span><span class="tag">Design System</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-index="3">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c4"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">04 / 05</div>
+            <div class="proj-name">Portfolio 3D</div>
+            <div class="proj-role">Creative Developer</div>
+            <div class="proj-tags">
+              <span class="tag">GSAP</span><span class="tag">Three.js</span><span class="tag">CSS</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-index="4">
+          <div class="proj-card-media"><canvas class="proj-canvas" id="c5"></canvas></div>
+          <div class="proj-card-body">
+            <div class="proj-num">05 / 05</div>
+            <div class="proj-name">AI Chat Interface</div>
+            <div class="proj-role">Full-Stack &amp; AI</div>
+            <div class="proj-tags">
+              <span class="tag">Claude API</span><span class="tag">React</span><span class="tag">Node.js</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="carousel-nav">
+      <button class="carousel-btn" id="prevBtn" aria-label="Precedente">←</button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="nextBtn" aria-label="Successivo">→</button>
+    </div>
+  </div>
+
+  <!-- Detail Overlay -->
+  <div id="projOverlay" class="proj-overlay" aria-hidden="true">
+    <div class="proj-overlay-backdrop" id="overlayBackdrop"></div>
+    <div class="proj-overlay-panel">
+      <button class="proj-overlay-close" id="overlayClose" aria-label="Chiudi">✕</button>
+      <div class="proj-overlay-content" id="overlayContent"></div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,31 @@
+---
+import '../styles/variables.css'
+import '../styles/base.css'
+import '../styles/components.css'
+import '../styles/layout.css'
+import '../styles/mobile.css'
+---
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gabriele Sergio — Design Engineer</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..400&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <slot />
+
+  <script>
+    import '../scripts/main.js'
+  </script>
+</body>
+</html>
