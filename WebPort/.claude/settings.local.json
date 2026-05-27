@@ -7,7 +7,10 @@
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
       "mcp__Claude_Preview__preview_start",
-      "mcp__Claude_in_Chrome__tabs_context_mcp"
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npx vite *)"
     ]
   }
 }

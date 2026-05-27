@@ -1,4 +1,7 @@
-function initAnimations() {
+import { gsap, ScrollTrigger } from './gsap-config.js'
+import { initHeroCanvas } from './canvas.js'
+
+export function initAnimations() {
   // Hero entrance
   gsap.from('.hero-tag', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.1 });
   gsap.from('.hero-name .word', { opacity: 0, y: 80, skewY: 4, duration: 0.9, ease: 'power3.out', stagger: 0.12, delay: 0.3 });

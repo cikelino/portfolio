@@ -1,4 +1,4 @@
-function drawProjectCanvas(id, colorA, colorB, type) {
+export function drawProjectCanvas(id, colorA, colorB, type) {
   const canvas = document.getElementById(id);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -6,7 +6,6 @@ function drawProjectCanvas(id, colorA, colorB, type) {
   canvas.height = canvas.offsetHeight || 300;
   const w = canvas.width, h = canvas.height;
 
-  // Only animate when canvas is in viewport
   let active = false;
   new IntersectionObserver(([e]) => {
     active = e.isIntersecting;
@@ -66,7 +65,7 @@ function drawProjectCanvas(id, colorA, colorB, type) {
   }
 }
 
-function initHeroCanvas() {
+export function initHeroCanvas() {
   const canvas = document.getElementById('heroCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');

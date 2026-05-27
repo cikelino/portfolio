@@ -1,7 +1,7 @@
-// Text Scramble effect su .section-title prima del clip-path reveal
+import { ScrollTrigger } from './gsap-config.js'
 
 const CHARS    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
-const DURATION = 600; // durata scramble in ms
+const DURATION = 600;
 const FRAME_MS = 1000 / 60;
 
 class TextScramble {
@@ -24,18 +24,16 @@ class TextScramble {
       lastTime = now;
       frame++;
 
-      const progress = frame / totalFrames; // 0 → 1
+      const progress = frame / totalFrames;
       const original = this.original;
       let output = '';
 
       for (let i = 0; i < original.length; i++) {
         const ch = original[i];
-        // Spazi e caratteri speciali non si scramblano
-        if (ch === ' ' || ch === '\n' || ch === '\u00A0') {
+        if (ch === ' ' || ch === '\n' || ch === ' ') {
           output += ch;
           continue;
         }
-        // Caratteri si risolvono da sinistra a destra con la progressione
         if (i / original.length < progress) {
           output += ch;
         } else {
@@ -57,15 +55,13 @@ class TextScramble {
   }
 }
 
-// Hook con ScrollTrigger: scramble si attiva prima del clip-path reveal
 document.querySelectorAll('.section-title').forEach(title => {
-  // Salva il testo originale prima che gsap.set(clipPath) venga applicato
-  const scrambler  = new TextScramble(title);
-  let   hasPlayed  = false;
+  const scrambler = new TextScramble(title);
+  let hasPlayed   = false;
 
   ScrollTrigger.create({
     trigger: title,
-    start: 'top 92%', // leggermente prima del reveal (88%)
+    start: 'top 92%',
     onEnter: () => {
       if (hasPlayed) return;
       hasPlayed = true;
