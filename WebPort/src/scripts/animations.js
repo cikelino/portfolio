@@ -9,7 +9,6 @@ export function initAnimations() {
   gsap.from('.hero-ctas', { opacity: 0, y: 20, duration: 0.7, ease: 'power3.out', delay: 0.9 });
   gsap.from('.hero-scroll', { opacity: 0, duration: 0.7, delay: 1.2 });
   gsap.from('.hero-stage-wrap', { opacity: 0, scale: 0.88, rotate: -4, duration: 1.1, ease: 'power3.out', delay: 0.35 });
-  gsap.from('.hero-stage-label, .hero-stage-badge', { opacity: 0, y: 18, stagger: 0.12, duration: 0.7, ease: 'power3.out', delay: 0.85 });
 
   // Scroll-triggered: section headings
   gsap.utils.toArray('.section-label, .section-title, .about-big-text, .ai-content h2').forEach(el => {
@@ -55,9 +54,9 @@ export function initAnimations() {
     scale: 0.6, opacity: 0, duration: 1.2, ease: 'power3.out',
     scrollTrigger: { trigger: '#ai-section', start: 'top 70%', once: true }
   });
-  gsap.from('.ai-feature', {
-    opacity: 0, x: 30, stagger: 0.15, duration: 0.7, ease: 'power3.out',
-    scrollTrigger: { trigger: '.ai-features', start: 'top 85%', once: true }
+  gsap.from('.atc', {
+    opacity: 0, y: 20, stagger: 0.1, duration: 0.6, ease: 'power3.out',
+    scrollTrigger: { trigger: '.ai-tech-cards', start: 'top 85%', once: true }
   });
   gsap.from('.ai-chip-float', {
     opacity: 0, scale: 0.8, stagger: 0.1, duration: 0.6, ease: 'back.out(1.4)',

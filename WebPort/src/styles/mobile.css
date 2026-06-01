@@ -5,9 +5,7 @@
   .hero-split { grid-template-columns: 1fr; gap: var(--space-8); padding-top: 14vh; }
   .hero-stage { min-height: 380px; }
   .hero-stage-wrap { width: min(100%, 400px); }
-  .hero-stage-note { width: min(240px, calc(100% - 28px)); right: 14px; bottom: 64px; }
-  .orb-help { right: 14px; bottom: 14px; }
-  .about-inner { grid-template-columns: 1fr; gap: var(--space-10); }
+.about-inner { grid-template-columns: 1fr; gap: var(--space-10); }
   .skills-grid { grid-template-columns: 1fr; }
   .ai-inner { grid-template-columns: 1fr; }
   .ai-visual { height: 280px; }

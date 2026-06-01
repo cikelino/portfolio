@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview — Ferrofluid Mascot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=DM+Sans:wght@300..600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sand:#ffdead;--sand-dim:#e8c98a;
+  --teal:#826976;--teal-light:#a88a97;
+  --black:#060606;--dark2:#161616;--dark3:#1d1d1d;
+  --border:rgba(255,255,255,0.06);--border-t:rgba(130,105,118,0.3);
+  --text:#e8e6e1;--muted:#8a8884;--faint:#4a4948;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;padding-bottom:80px}
+
+.top-bar{
+  background:rgba(255,255,255,.025);border-bottom:1px solid var(--border);
+  padding:10px 32px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint)
+}
+.top-bar span{color:var(--sand-dim)}
+
+.page{max-width:900px;margin:0 auto;padding:48px 24px 0}
+
+.intro{margin-bottom:40px}
+.intro-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal-light);margin-bottom:6px}
+.intro-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.intro-sub{font-size:12px;color:var(--faint)}
+
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+
+.panel{
+  background:var(--dark2);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;
+  transition:border-color .25s;
+}
+.panel:hover{border-color:var(--border-t)}
+
+.panel canvas{display:block;width:100%;cursor:none}
+
+.panel-info{padding:18px 20px 22px}
+.p-badge{
+  display:inline-block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal-light);background:rgba(130,105,118,.08);
+  border:1px solid var(--border-t);border-radius:20px;padding:3px 10px;margin-bottom:10px
+}
+.p-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px}
+.p-desc{font-size:11px;color:var(--muted);line-height:1.65}
+.p-note{font-size:10px;color:var(--faint);margin-top:8px}
+.p-note span{color:var(--sand-dim)}
+</style>
+</head>
+<body>
+
+<div class="top-bar">Ferrofluid Mascot Preview &nbsp;·&nbsp; <span>2 prototipi — canvas 2D</span> &nbsp;·&nbsp; muovi il mouse sui canvas</div>
+
+<div class="page">
+  <div class="intro">
+    <div class="intro-tag">Hero Section · Mascotte</div>
+    <div class="intro-title">Ferrofluido interattivo</div>
+    <div class="intro-sub">Il cursore è il magnete — sposta il mouse sui canvas qui sotto</div>
+  </div>
+
+  <div class="panels">
+
+    <div class="panel">
+      <canvas id="ferroA"></canvas>
+      <div class="panel-info">
+        <div class="p-badge">Astratto</div>
+        <div class="p-name">Ferrofluido puro</div>
+        <div class="p-desc">Liquido magnetico scuro che forma picchi verso il cursore. Onde che si propagano sulla superficie. Evidenza visiva dell'AI come forza invisibile.</div>
+        <div class="p-note">Tecnica: <span>canvas 2D · spring physics · quadratic bezier</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <canvas id="ferroB"></canvas>
+      <div class="panel-info">
+        <div class="p-badge">Personaggio Giapponese</div>
+        <div class="p-name">Mascotte + capelli magnetici</div>
+        <div class="p-desc">Personaggio stile anime con capelli di ferrofluido. I capelli reagiscono al cursore come un magnete — quando ti avvicini i picchi si orientano verso di te.</div>
+        <div class="p-note">Tecnica: <span>canvas 2D · stesso motore · disegno composito</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   FERROFLUID ENGINE — spring physics + quadratic bezier
+═══════════════════════════════════════════════════════════ */
+class Ferro {
+  constructor(canvas, cfg = {}) {
+    this.cv  = canvas
+    this.ctx = canvas.getContext('2d')
+    this.cfg = {
+      N:         cfg.N         ?? 160,
+      baseY:     cfg.baseY     ?? 0,     // set after resize
+      amplitude: cfg.amplitude ?? 145,
+      sigma:     cfg.sigma     ?? 44,
+      stiffness: cfg.stiffness ?? 0.018,
+      damping:   cfg.damping   ?? 0.026,
+      spread:    cfg.spread    ?? 0.014,
+      color0:    cfg.color0    ?? 'rgba(120,80,140,0.9)',
+      color1:    cfg.color1    ?? '#0e0810',
+      color2:    cfg.color2    ?? '#060408',
+      lineColor: cfg.lineColor ?? 'rgba(200,160,220,0.18)',
+    }
+    this.mx = -9999; this.my = -9999; this.active = false
+    this.pts = []
+    this.resize()
+    this._bind()
+  }
+
+  resize() {
+    const W = this.cv.parentElement.offsetWidth
+    const H = Math.round(W * 0.88)
+    this.cv.width  = W
+    this.cv.height = H
+    this.W = W; this.H = H
+    if (!this.cfg.baseY) this.cfg.baseY = H * 0.62
+    this._initPts()
+  }
+
+  _initPts() {
+    const {N, W} = this
+    this.pts = Array.from({length: N}, (_, i) => ({
+      x: (i / (N - 1)) * W,
+      y: 0,   // displacement (negative = upward)
+      vy: 0
+    }))
+  }
+
+  get N() { return this.cfg.N }
+  get W() { return this._W }
+  set W(v) { this._W = v }
+  get H() { return this._H }
+  set H(v) { this._H = v }
+
+  _bind() {
+    this.cv.addEventListener('mousemove', e => {
+      const r = this.cv.getBoundingClientRect()
+      this.mx = (e.clientX - r.left) * (this.W / r.width)
+      this.my = (e.clientY - r.top)  * (this.H / r.height)
+      this.active = true
+    })
+    this.cv.addEventListener('mouseleave', () => { this.active = false })
+  }
+
+  update() {
+    const {pts, cfg} = this
+    const N = cfg.N
+
+    // Cursor attraction
+    for (let i = 0; i < N; i++) {
+      const p  = pts[i]
+      const sy = cfg.baseY + p.y           // current surface y
+      let force = 0
+      if (this.active) {
+        const dx  = p.x - this.mx
+        const dy  = sy  - this.my           // positive = cursor above surface
+        const gx  = Math.exp(-dx * dx / (2 * cfg.sigma * cfg.sigma))
+        const gy  = Math.exp(-Math.max(0, -dy) / 90)   // fade if cursor below surface
+        force = -cfg.amplitude * gx * gy
+      }
+      const acc = (force - p.y) * cfg.stiffness - p.vy * cfg.damping
+      p.vy += acc
+      p.y  += p.vy
+    }
+
+    // Wave propagation (horizontal)
+    for (let i = 1; i < N - 1; i++) {
+      pts[i].vy += cfg.spread * (pts[i-1].y + pts[i+1].y - 2 * pts[i].y)
+    }
+  }
+
+  /* draw the fluid shape into ctx, offset by (ox, oy) */
+  draw(ctx, ox, oy, W, H, baseY) {
+    const {pts, cfg} = this
+    const N    = cfg.N
+    const bY   = baseY ?? cfg.baseY
+
+    ctx.beginPath()
+    ctx.moveTo(ox, oy + H)
+    ctx.lineTo(ox, oy + bY + pts[0].y)
+
+    for (let i = 0; i < N - 1; i++) {
+      const p0 = pts[i], p1 = pts[i+1]
+      const mx = ox + (p0.x + p1.x) / 2 * (W / this.W)
+      const my = oy + bY + (p0.y + p1.y) / 2
+      const cx = ox + p0.x * (W / this.W)
+      const cy = oy + bY + p0.y
+      ctx.quadraticCurveTo(cx, cy, mx, my)
+    }
+    ctx.lineTo(ox + W, oy + bY + pts[N-1].y)
+    ctx.lineTo(ox + W, oy + H)
+    ctx.closePath()
+
+    const g = ctx.createLinearGradient(0, oy + bY - cfg.amplitude, 0, oy + H)
+    g.addColorStop(0,   cfg.color0)
+    g.addColorStop(0.12, cfg.color1)
+    g.addColorStop(1,   cfg.color2)
+    ctx.fillStyle = g
+    ctx.fill()
+
+    // Surface glint
+    ctx.beginPath()
+    ctx.moveTo(ox, oy + bY + pts[0].y)
+    for (let i = 0; i < N - 1; i++) {
+      const p0 = pts[i], p1 = pts[i+1]
+      const mx = ox + (p0.x + p1.x) / 2 * (W / this.W)
+      const my = oy + bY + (p0.y + p1.y) / 2
+      ctx.quadraticCurveTo(ox + p0.x * (W/this.W), oy + bY + p0.y, mx, my)
+    }
+    ctx.strokeStyle = cfg.lineColor
+    ctx.lineWidth   = 1.2
+    ctx.stroke()
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CANVAS A — Ferrofluido astratto
+═══════════════════════════════════════════════════════════ */
+window.addEventListener('load', function() {
+;(function() {
+  const cv  = document.getElementById('ferroA')
+  const ctx = cv.getContext('2d')
+  const f   = new Ferro(cv, {
+    amplitude: 150,
+    sigma:     46,
+    color0:   'rgba(110,70,140,0.95)',
+    color1:   '#0d0810',
+    color2:   '#05030a',
+    lineColor:'rgba(190,150,220,0.2)'
+  })
+
+  // Idle mouse that drifts slowly when not hovering
+  let idleT = 0
+
+  function tick() {
+    requestAnimationFrame(tick)
+    const {W, H, ctx: c, cfg} = f
+    c.clearRect(0, 0, W, H)
+
+    // Background
+    c.fillStyle = '#05030a'
+    c.fillRect(0, 0, W, H)
+
+    // Subtle grid
+    c.strokeStyle = 'rgba(255,255,255,0.025)'
+    c.lineWidth = 1
+    for (let x = 0; x < W; x += 40) { c.beginPath(); c.moveTo(x,0); c.lineTo(x,H); c.stroke() }
+    for (let y = 0; y < H; y += 40) { c.beginPath(); c.moveTo(0,y); c.lineTo(W,y); c.stroke() }
+
+    // If not hovering: drift idle cursor
+    if (!f.active) {
+      idleT += 0.012
+      f.mx = W/2 + Math.cos(idleT * 0.7) * W * 0.25
+      f.my = cfg.baseY - 60 + Math.sin(idleT) * 30
+      f.active = true
+      f.update()
+      f.active = false
+    } else {
+      f.update()
+    }
+
+    f.draw(c, 0, 0, W, H)
+
+    // Cursor magnet indicator
+    if (f.active) {
+      const gx = f.mx, gy = f.my
+      c.beginPath()
+      c.arc(gx, gy, 8, 0, Math.PI*2)
+      c.strokeStyle = 'rgba(180,140,210,0.6)'
+      c.lineWidth = 1.5
+      c.stroke()
+      c.beginPath()
+      c.arc(gx, gy, 2, 0, Math.PI*2)
+      c.fillStyle = 'rgba(220,190,240,0.8)'
+      c.fill()
+
+      // Pull lines from surface
+      for (let i = 0; i < f.cfg.N; i += 12) {
+        const p = f.pts[i]
+        if (p.y < -8) {
+          const sx = p.x, sy = cfg.baseY + p.y
+          c.beginPath()
+          c.moveTo(sx, sy)
+          c.lineTo(gx, gy)
+          c.strokeStyle = `rgba(160,110,200,${Math.min(0.12, -p.y/600)})`
+          c.lineWidth = 0.5
+          c.stroke()
+        }
+      }
+    }
+  }
+  tick()
+})()
+
+/* ═══════════════════════════════════════════════════════════
+   CANVAS B — Personaggio giapponese + capelli ferrofluido
+═══════════════════════════════════════════════════════════ */
+;(function() {
+  const cv  = document.getElementById('ferroB')
+  const ctx = cv.getContext('2d')
+
+  // Ferro engine for the hair
+  const f = new Ferro(cv, {
+    N:         120,
+    amplitude: 110,
+    sigma:     38,
+    stiffness: 0.022,
+    damping:   0.030,
+    spread:    0.016,
+    color0:   'rgba(40,20,50,0.98)',
+    color1:   '#0e080f',
+    color2:   '#0a060c',
+    lineColor:'rgba(140,100,160,0.25)'
+  })
+
+  // Face metrics (computed after resize)
+  function metrics() {
+    const W = cv.width, H = cv.height
+    const cx = W / 2
+    const cy = H * 0.60
+    const fr = W * 0.215
+    const hairBase = cy - fr * 0.75   // y of hair base on head
+    return {W, H, cx, cy, fr, hairBase}
+  }
+
+  // Override baseY for hair
+  function updateBaseY() {
+    const m = metrics()
+    f.cfg.baseY = m.hairBase
+  }
+  updateBaseY()
+
+  function drawFace(ctx, m) {
+    const {cx, cy, fr} = m
+
+    // ── Neck ──
+    ctx.beginPath()
+    ctx.rect(cx - fr*0.22, cy + fr*0.86, fr*0.44, fr*0.5)
+    ctx.fillStyle = '#f5e8d8'
+    ctx.fill()
+
+    // ── Face base ──
+    ctx.beginPath()
+    ctx.arc(cx, cy, fr, 0, Math.PI*2)
+    ctx.fillStyle = '#f5e8d8'
+    ctx.fill()
+
+    // Face shadow (chin / sides)
+    const faceShad = ctx.createRadialGradient(cx, cy + fr*0.3, fr*0.2, cx, cy, fr)
+    faceShad.addColorStop(0, 'rgba(220,180,150,0)')
+    faceShad.addColorStop(1, 'rgba(180,130,100,0.25)')
+    ctx.beginPath()
+    ctx.arc(cx, cy, fr, 0, Math.PI*2)
+    ctx.fillStyle = faceShad
+    ctx.fill()
+
+    // ── Eyes ──
+    function drawEye(ex, ey) {
+      const ew = fr*0.19, eh = fr*0.24
+
+      // White
+      ctx.beginPath()
+      ctx.ellipse(ex, ey, ew, eh, 0, 0, Math.PI*2)
+      ctx.fillStyle = '#fff'
+      ctx.fill()
+
+      // Iris gradient
+      const ig = ctx.createRadialGradient(ex - ew*0.2, ey - eh*0.2, eh*0.05, ex, ey, eh*0.75)
+      ig.addColorStop(0, '#5a3070')
+      ig.addColorStop(0.5, '#2a1040')
+      ig.addColorStop(1, '#0a0510')
+      ctx.beginPath()
+      ctx.ellipse(ex, ey, ew*0.72, eh*0.75, 0, 0, Math.PI*2)
+      ctx.fillStyle = ig
+      ctx.fill()
+
+      // Pupil
+      ctx.beginPath()
+      ctx.arc(ex, ey + eh*0.08, ew*0.3, 0, Math.PI*2)
+      ctx.fillStyle = '#050208'
+      ctx.fill()
+
+      // Highlight 1 (large)
+      ctx.beginPath()
+      ctx.arc(ex - ew*0.28, ey - eh*0.28, ew*0.2, 0, Math.PI*2)
+      ctx.fillStyle = 'rgba(255,255,255,0.95)'
+      ctx.fill()
+      // Highlight 2 (small)
+      ctx.beginPath()
+      ctx.arc(ex + ew*0.1, ey + eh*0.05, ew*0.1, 0, Math.PI*2)
+      ctx.fillStyle = 'rgba(255,255,255,0.6)'
+      ctx.fill()
+
+      // Eyelashes (top)
+      ctx.beginPath()
+      ctx.ellipse(ex, ey - eh*0.62, ew*1.05, eh*0.18, 0, 0, Math.PI*2)
+      ctx.fillStyle = '#1a0820'
+      ctx.fill()
+    }
+
+    drawEye(cx - fr*0.32, cy - fr*0.06)
+    drawEye(cx + fr*0.32, cy - fr*0.06)
+
+    // ── Eyebrows ──
+    function drawBrow(bx, by) {
+      ctx.beginPath()
+      ctx.moveTo(bx - fr*0.22, by)
+      ctx.bezierCurveTo(bx - fr*0.08, by - fr*0.1, bx + fr*0.08, by - fr*0.1, bx + fr*0.22, by + fr*0.02)
+      ctx.strokeStyle = '#1a0820'
+      ctx.lineWidth = fr * 0.06
+      ctx.lineCap = 'round'
+      ctx.stroke()
+    }
+    drawBrow(cx - fr*0.32, cy - fr*0.38)
+    drawBrow(cx + fr*0.32, cy - fr*0.38)
+
+    // ── Blush ──
+    function blush(bx, by) {
+      const bg = ctx.createRadialGradient(bx, by, 0, bx, by, fr*0.25)
+      bg.addColorStop(0, 'rgba(240,140,140,0.3)')
+      bg.addColorStop(1, 'rgba(240,140,140,0)')
+      ctx.beginPath()
+      ctx.ellipse(bx, by, fr*0.26, fr*0.13, 0, 0, Math.PI*2)
+      ctx.fillStyle = bg
+      ctx.fill()
+    }
+    blush(cx - fr*0.6, cy + fr*0.18)
+    blush(cx + fr*0.6, cy + fr*0.18)
+
+    // ── Nose ──
+    ctx.beginPath()
+    ctx.arc(cx, cy + fr*0.18, fr*0.04, 0, Math.PI*2)
+    ctx.fillStyle = 'rgba(180,130,110,0.5)'
+    ctx.fill()
+
+    // ── Mouth ──
+    ctx.beginPath()
+    ctx.moveTo(cx - fr*0.14, cy + fr*0.38)
+    ctx.quadraticCurveTo(cx, cy + fr*0.50, cx + fr*0.14, cy + fr*0.38)
+    ctx.strokeStyle = '#c87060'
+    ctx.lineWidth = fr * 0.05
+    ctx.lineCap = 'round'
+    ctx.stroke()
+
+    // Lip highlight
+    ctx.beginPath()
+    ctx.moveTo(cx - fr*0.08, cy + fr*0.40)
+    ctx.quadraticCurveTo(cx, cy + fr*0.47, cx + fr*0.08, cy + fr*0.40)
+    ctx.strokeStyle = 'rgba(255,200,190,0.5)'
+    ctx.lineWidth = fr * 0.025
+    ctx.stroke()
+
+    // ── Ears ──
+    function ear(ex, ey, flip) {
+      ctx.beginPath()
+      ctx.ellipse(ex, ey, fr*0.12, fr*0.18, flip * 0.2, 0, Math.PI*2)
+      ctx.fillStyle = '#f0d8c0'
+      ctx.fill()
+      ctx.beginPath()
+      ctx.ellipse(ex + flip*fr*0.01, ey, fr*0.07, fr*0.12, flip * 0.2, 0, Math.PI*2)
+      ctx.fillStyle = 'rgba(220,160,140,0.5)'
+      ctx.fill()
+    }
+    ear(cx - fr*0.97, cy + fr*0.05, -1)
+    ear(cx + fr*0.97, cy + fr*0.05,  1)
+  }
+
+  function drawHairBase(ctx, m) {
+    const {cx, cy, fr, hairBase, W} = m
+
+    // Hair "cap" — dark solid base clipped to top of head
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(cx, cy, fr * 1.02, -Math.PI, 0, true)  // top half of head
+    ctx.lineTo(cx + fr*1.02, hairBase)
+    ctx.lineTo(cx - fr*1.02, hairBase)
+    ctx.closePath()
+    ctx.fillStyle = '#0e080f'
+    ctx.fill()
+    ctx.restore()
+
+    // Side hair — two oval masses on the sides
+    function sideHair(sx, sy) {
+      const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, fr*0.55)
+      g.addColorStop(0, '#1a1020')
+      g.addColorStop(1, 'rgba(14,8,15,0)')
+      ctx.beginPath()
+      ctx.ellipse(sx, sy, fr*0.42, fr*0.65, 0, 0, Math.PI*2)
+      ctx.fillStyle = g
+      ctx.fill()
+    }
+    sideHair(cx - fr*0.88, cy + fr*0.1)
+    sideHair(cx + fr*0.88, cy + fr*0.1)
+  }
+
+  let idleT = 0
+
+  function tick() {
+    requestAnimationFrame(tick)
+    const m = metrics()
+    updateBaseY()
+    const {W, H, cx, cy, fr, hairBase} = m
+
+    ctx.clearRect(0, 0, W, H)
+
+    // Background
+    ctx.fillStyle = '#060408'
+    ctx.fillRect(0, 0, W, H)
+
+    // Idle drift when not hovering
+    if (!f.active) {
+      idleT += 0.008
+      f.mx = cx + Math.cos(idleT * 0.6) * W * 0.3
+      f.my = hairBase - 55 + Math.sin(idleT * 0.9) * 25
+      f.active = true
+      f.update()
+      f.active = false
+    } else {
+      f.update()
+    }
+
+    // 1 — Hair base (dark cap)
+    drawHairBase(ctx, m)
+
+    // 2 — Ferrofluid hair (spikes upward from hairBase)
+    //     Only draw in the region above hairBase
+    ctx.save()
+    ctx.beginPath()
+    // Clip to the wide oval above head
+    ctx.rect(cx - fr*1.05, 0, fr*2.1, hairBase + 5)
+    ctx.clip()
+    f.draw(ctx, 0, 0, W, H, hairBase)
+    ctx.restore()
+
+    // 3 — Face on top
+    drawFace(ctx, m)
+
+    // 4 — Cursor magnet dot
+    if (f.active) {
+      ctx.beginPath()
+      ctx.arc(f.mx, f.my, 6, 0, Math.PI*2)
+      ctx.strokeStyle = 'rgba(160,120,190,0.5)'
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(f.mx, f.my, 2, 0, Math.PI*2)
+      ctx.fillStyle = 'rgba(200,170,230,0.8)'
+      ctx.fill()
+    }
+  }
+  tick()
+})()
+
+}); // end window load
+</script>
+</body>
+</html>

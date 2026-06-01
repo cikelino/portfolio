@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "gsap": "^3.12.5",
-    "lenis": "^1.1.14"
+    "lenis": "^1.1.14",
+    "three": "^0.128.0"
   },
   "devDependencies": {
     "astro": "^6.3.8"

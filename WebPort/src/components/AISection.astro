@@ -17,35 +17,103 @@
         <div class="ai-chip-float">Chatbot UI</div>
       </div>
     </div>
+
     <div class="ai-content">
       <div class="section-label">AI Engineer</div>
       <h2>Interfacce<br /><em>intelligenti</em><br />by design.</h2>
       <p>
         Negli ultimi anni ho integrato strumenti AI nelle interfacce frontend per elevare l'esperienza utente a un nuovo livello.
       </p>
-      <div class="ai-features">
-        <div class="ai-feature">
-          <div class="ai-feature-icon">💬</div>
-          <div class="ai-feature-text">
-            <strong>Assistenti contestuali &amp; Chatbot UI</strong>
-            Integrazione di LLM (Claude, OpenAI) direttamente nell'interfaccia per supporto utente e guida contestuale.
+
+      <div class="ai-tech-cards">
+
+        <!-- Card 1: Claude API — typewriter streaming -->
+        <div class="atc atc--claude">
+          <div class="atc-header">
+            <span class="atc-dot" style="background:#b06060"></span>
+            Claude API
+          </div>
+          <div class="atc-screen">
+            <div class="atc-row atc-label">user</div>
+            <div class="atc-row atc-user">crea una bio per il portfolio</div>
+            <div class="atc-row atc-label" style="margin-top:6px">assistant</div>
+            <div class="atc-row">
+              <span class="atc-stream">Sono Gabriele, un Design Engineer AI</span><span class="atc-cursor">▋</span>
+            </div>
           </div>
         </div>
-        <div class="ai-feature">
-          <div class="ai-feature-icon">🧠</div>
-          <div class="ai-feature-text">
-            <strong>Form intelligenti &amp; Raccomandazioni</strong>
-            Form auto-compilati, suggerimenti predittivi e contenuto personalizzato basato su AI generativa.
+
+        <!-- Card 2: OpenAI — progress bar + counter sincronizzato -->
+        <div class="atc atc--openai">
+          <div class="atc-header">
+            <span class="atc-dot" style="background:#74aa9c"></span>
+            OpenAI API
+          </div>
+          <div class="atc-screen">
+            <div class="atc-row atc-label">generating</div>
+            <div class="atc-bar-track">
+              <div class="atc-bar-fill" style="background:#74aa9c"></div>
+            </div>
+            <div class="atc-stats">
+              <span>model <em>gpt-4o</em></span>
+              <span>tokens <em class="atc-tokens-count">0</em></span>
+            </div>
           </div>
         </div>
-        <div class="ai-feature">
-          <div class="ai-feature-icon">⚙️</div>
-          <div class="ai-feature-text">
-            <strong>Vercel AI SDK &amp; Tool Generativi</strong>
-            Flussi di streaming, tool calling e integrazione di modelli generativi nella pipeline frontend.
+
+        <!-- Card 3: Vercel AI SDK — textDelta chunks realistici -->
+        <div class="atc atc--vercel">
+          <div class="atc-header">
+            <span class="atc-dot" style="background:rgba(255,255,255,0.7)"></span>
+            Vercel AI SDK
+          </div>
+          <div class="atc-screen">
+            <div class="atc-row atc-label">textDelta</div>
+            <div class="atc-tokens-wrap">
+              <span class="atc-tok">"Sono"</span>
+              <span class="atc-tok">" un"</span>
+              <span class="atc-tok">" Design"</span>
+              <span class="atc-tok">" Eng"</span>
+              <span class="atc-tok">"ineer"</span>
+              <span class="atc-tok">" AI"</span>
+            </div>
+            <div class="atc-row atc-dim" style="margin-top:6px">≋ textDelta · 42ms</div>
           </div>
         </div>
+
+        <!-- Card 4: Prompt Engineering — variabili pulsanti -->
+        <div class="atc atc--prompt">
+          <div class="atc-header">
+            <span class="atc-dot" style="background:#4ade80"></span>
+            Prompt Eng.
+          </div>
+          <div class="atc-screen">
+            <div class="atc-row"><span class="atc-key">[system]</span> <span class="atc-var">&#123;context&#125;</span></div>
+            <div class="atc-row"><span class="atc-key">[user]&nbsp;&nbsp;</span> <span class="atc-var atc-var--2">&#123;input&#125;</span></div>
+            <div class="atc-row"><span class="atc-key">[temp]&nbsp;&nbsp;</span> <span class="atc-var atc-var--3">0.7</span></div>
+            <div class="atc-row atc-dim" style="margin-top:6px">→ structured output</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  // Counter sincronizzato con la CSS progress bar (5500ms cycle)
+  const el = document.querySelector('.atc-tokens-count')
+  if (el) {
+    const CYCLE = 5500
+    const MAX   = 847
+    function tick() {
+      const t = (Date.now() % CYCLE) / CYCLE
+      let count = 0
+      if      (t > 0.03 && t < 0.65)  count = Math.round(((t - 0.03) / 0.62) * MAX)
+      else if (t >= 0.65 && t < 0.97) count = MAX
+      el.textContent = count
+      requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  }
+</script>

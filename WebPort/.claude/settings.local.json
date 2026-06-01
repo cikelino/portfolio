@@ -14,7 +14,10 @@
       "Bash(node -e \"require\\('./node_modules/astro/package.json'\\).version\")",
       "Bash(npx astro *)",
       "Bash(cp css/*.css src/styles/)",
-      "Bash(cp js/*.js src/scripts/)"
+      "Bash(cp js/*.js src/scripts/)",
+      "Bash(gh repo *)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
