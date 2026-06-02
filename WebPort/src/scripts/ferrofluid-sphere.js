@@ -9,7 +9,7 @@ export function initFerrofluidSphere(canvas) {
   if (!canvas) return
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
   renderer.setClearColor(0x000000, 0) // canvas trasparente: resta solo la sfera
 
   const scene = new THREE.Scene()
@@ -145,7 +145,7 @@ export function initFerrofluidSphere(canvas) {
     u_pointerStrength: { value: 0.0 }
   }
 
-  const geometry = new THREE.IcosahedronGeometry(1, 48)
+  const geometry = new THREE.IcosahedronGeometry(1, 32)
   const material = new THREE.ShaderMaterial({ uniforms, vertexShader, fragmentShader })
   const sphere = new THREE.Mesh(geometry, material)
   scene.add(sphere)
