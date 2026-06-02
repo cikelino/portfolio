@@ -205,8 +205,13 @@ export function initFerrofluidSphere(canvas) {
   if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas)
   resize()
 
+  let sphereVisible = true
+  new IntersectionObserver(([e]) => { sphereVisible = e.isIntersecting }, { threshold: 0.05 }).observe(canvas)
+
   const clock = new THREE.Clock()
   function animate(){
+    requestAnimationFrame(animate)
+    if (!sphereVisible) return
     const dt = clock.getDelta()
     uniforms.u_time.value += dt
 
@@ -219,7 +224,6 @@ export function initFerrofluidSphere(canvas) {
 
     if (!dragging) sphere.rotation.y += dt*0.15
     renderer.render(scene, camera)
-    requestAnimationFrame(animate)
   }
   animate()
 }

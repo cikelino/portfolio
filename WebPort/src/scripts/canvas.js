@@ -6,10 +6,10 @@ export function drawProjectCanvas(id, colorA, colorB, type) {
   canvas.height = canvas.offsetHeight || 300;
   const w = canvas.width, h = canvas.height;
 
-  let active = false;
+  let visible = false;
   new IntersectionObserver(([e]) => {
-    active = e.isIntersecting;
-    if (active) draw(0);
+    visible = e.isIntersecting;
+    if (visible) draw(0);
   }, { threshold: 0.05 }).observe(canvas);
 
   function draw(t) {
@@ -49,10 +49,10 @@ export function drawProjectCanvas(id, colorA, colorB, type) {
       for (let row = 0; row < 4; row++) {
         for (let col = 0; col < 8; col++) {
           const x = 50 + col * 55, y = 80 + row * 50;
-          const active = (row + col) % 3 !== 0;
+          const cellActive = (row + col) % 3 !== 0;
           ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI * 2);
-          ctx.fillStyle = active ? colorA + 'cc' : 'rgba(255,255,255,0.08)'; ctx.fill();
-          if (active) {
+          ctx.fillStyle = cellActive ? colorA + 'cc' : 'rgba(255,255,255,0.08)'; ctx.fill();
+          if (cellActive) {
             ctx.beginPath(); ctx.arc(x, y, 16, 0, Math.PI * 2);
             ctx.strokeStyle = colorA + '33'; ctx.lineWidth = 1; ctx.stroke();
           }
@@ -61,7 +61,7 @@ export function drawProjectCanvas(id, colorA, colorB, type) {
       ctx.font = '11px monospace'; ctx.fillStyle = 'rgba(255,255,255,0.25)';
       ctx.fillText('POSTAZIONE DISPONIBILE', 50, h - 30);
     }
-    if (active) requestAnimationFrame(() => draw(t + 0.02));
+    if (visible) requestAnimationFrame(() => draw(t + 0.02));
   }
 }
 
