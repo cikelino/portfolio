@@ -31,10 +31,10 @@ export function initAnimations() {
     });
   });
 
-  // Skill cards
-  gsap.from('.skill-category', {
-    opacity: 0, y: 50, stagger: 0.08, duration: 0.7, ease: 'power3.out',
-    scrollTrigger: { trigger: '.skills-grid', start: 'top 85%', once: true }
+  // Skill category blocks
+  gsap.from('.cat-block', {
+    opacity: 0, y: 40, stagger: 0.08, duration: 0.7, ease: 'power3.out',
+    scrollTrigger: { trigger: '.skills-stage-wrap', start: 'top 80%', once: true }
   });
 
   // Timeline

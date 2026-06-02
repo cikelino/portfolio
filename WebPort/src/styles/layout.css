@@ -96,7 +96,7 @@
 .cat-name {
   font-family: 'DM Mono', monospace; font-size: 9px;
   letter-spacing: 0.18em; text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.55);
   margin-bottom: 7px;
   display: flex; align-items: center; gap: 8px;
   white-space: nowrap;
@@ -111,7 +111,7 @@
 .cat-skill {
   font-family: 'DM Mono', monospace;
   font-size: 10.5px; line-height: 1.85;
-  color: rgba(237,233,223,0.26);
+  color: rgba(237,233,223,0.62);
   white-space: nowrap;
 }
 

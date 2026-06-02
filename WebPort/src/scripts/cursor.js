@@ -18,7 +18,7 @@ function animateRing() {
 }
 animateRing();
 
-document.querySelectorAll('a, button, .project-card, .skill-category, .stat-card').forEach(el => {
+document.querySelectorAll('a, button, .proj-card, .stat-card, .logo-chip, [role="button"]').forEach(el => {
   el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
   el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
 });

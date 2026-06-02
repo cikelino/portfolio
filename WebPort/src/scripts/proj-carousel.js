@@ -159,6 +159,17 @@ cards.forEach((card, i) => {
     if (i !== activeIdx) { snapTo(i); return }
     openDetail(i)
   })
+  // Tastiera: Enter/Spazio apre (o porta in primo piano) la card
+  card.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return
+    e.preventDefault()
+    if (i !== activeIdx) snapTo(i)
+    else openDetail(i)
+  })
+  // Focus da tastiera (Tab): ruota la card al centro
+  card.addEventListener('focus', () => {
+    if (i !== activeIdx) snapTo(i)
+  })
 })
 
 function openDetail(idx) {

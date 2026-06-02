@@ -145,7 +145,7 @@ export function initFerrofluidSphere(canvas) {
     u_pointerStrength: { value: 0.0 }
   }
 
-  const geometry = new THREE.IcosahedronGeometry(1, 64)
+  const geometry = new THREE.IcosahedronGeometry(1, 48)
   const material = new THREE.ShaderMaterial({ uniforms, vertexShader, fragmentShader })
   const sphere = new THREE.Mesh(geometry, material)
   scene.add(sphere)
